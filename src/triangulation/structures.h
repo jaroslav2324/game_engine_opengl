@@ -1,3 +1,6 @@
+#include <iostream>
+#include <cmath>
+
 
 struct Node;
 struct Edge;
@@ -30,9 +33,11 @@ typedef struct Triangle{
     Edge* edgePtrs[3];
 } Triangle;
 
+// represents triangle, three edges and three nodes
 typedef struct NodesEdgesTriangles
 {
     NodesEdgesTriangles(Node n1, Node n2, Node n3);
+    NodesEdgesTriangles(const NodesEdgesTriangles& copyThis);
     Node node1, node2, node3;
     Edge edge1, edge2, edge3;
     Triangle triangle;
@@ -43,6 +48,7 @@ typedef struct NodesEdgesTriangles
     Edge* findEqualEdge(Edge& edge);
     void findTwoEdgesWithNode(Edge* returnEdge1, Edge* returnEdge2, Node& node);
     bool hasNode(Node& node);
+    bool hasEdge(Edge& edge);
 
     private:
     void initInnerPointers();

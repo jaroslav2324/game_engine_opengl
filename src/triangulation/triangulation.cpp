@@ -1,43 +1,5 @@
 #include "triangulation.h"
 
-void copyPtrToNeighbour(NodesEdgesTriangles& oldTriangle, NodesEdgesTriangles& newTriangle, Node& newNode){
-        
-    Edge* borderEdge = newTriangle.findEdgeWithoutNode(newNode);
-    int emptyEdgeIdx = borderEdge->getFirstNullptrTriangleIdx();
-    // get same edge from subdivided struct to copy pointer to neighbour triangle
-    Edge* oldTriangleEdge = oldTriangle.findEqualEdge(*borderEdge);
-    if (oldTriangleEdge->neighbourTriPtrs[0] != &oldTriangle.triangle){
-        borderEdge->neighbourTriPtrs[emptyEdgeIdx] = oldTriangleEdge->neighbourTriPtrs[0];
-    }
-    if (oldTriangleEdge->neighbourTriPtrs[1] != &oldTriangle.triangle){
-        borderEdge->neighbourTriPtrs[emptyEdgeIdx] = oldTriangleEdge->neighbourTriPtrs[0];
-    }
-}
-
-void setNeighbourPtrsToNewTriangles(
-    NodesEdgesTriangles& triangle, 
-    NodesEdgesTriangles& trNeigh1,
-    NodesEdgesTriangles& trNeigh2, 
-    Node& insertedInTriangNode){
-
-    Edge* ret1 = nullptr, *ret2 = nullptr;
-    triangle.findTwoEdgesWithNode(ret1, ret2, insertedInTriangNode);
-    // if ret1 is in newTr2 too
-    if (trNeigh1.findEqualEdge(*ret1) != nullptr){
-        // add pointer to neighbour triangles
-        int insertIdx = ret1->getFirstNullptrTriangleIdx();
-        ret1->neighbourTriPtrs[insertIdx] = &trNeigh1.triangle;
-        insertIdx = ret2->getFirstNullptrTriangleIdx();
-        ret2->neighbourTriPtrs[insertIdx] = &trNeigh2.triangle;
-    }
-    else if (trNeigh2.findEqualEdge(*ret1) != nullptr){
-        int insertIdx = ret1->getFirstNullptrTriangleIdx();
-        ret1->neighbourTriPtrs[insertIdx] = &trNeigh2.triangle;
-        insertIdx = ret2->getFirstNullptrTriangleIdx();
-        ret2->neighbourTriPtrs[insertIdx] = &trNeigh1.triangle;
-    }
-}
-
 NodesEdgesTriangles createSuperTriangle(std::vector<Node> points)
 {
     float maxX = points[0].x, minX = points[0].x, maxY = points[0].y, minY = points[0].y;
@@ -67,84 +29,33 @@ NodesEdgesTriangles createSuperTriangle(std::vector<Node> points)
     return NodesEdgesTriangles(nt1, nt2, nt3);
 }
 
-void subdivideTriangleInTriangulation(
-    NodesEdgesTriangles &subdivideThis, 
-    Node nodeInTriangle, 
-    std::vector<NodesEdgesTriangles> &triangulation){
 
-    NodesEdgesTriangles newTr1(subdivideThis.node1, subdivideThis.node2, nodeInTriangle);
-    NodesEdgesTriangles newTr2(subdivideThis.node2, subdivideThis.node3, nodeInTriangle);
-    NodesEdgesTriangles newTr3(subdivideThis.node3, subdivideThis.node1, nodeInTriangle);
 
-    copyPtrToNeighbour(subdivideThis, newTr1, nodeInTriangle);
-    copyPtrToNeighbour(subdivideThis, newTr2, nodeInTriangle);
-    copyPtrToNeighbour(subdivideThis, newTr3, nodeInTriangle);
+std::vector<NodesEdgesTriangles> triangulateBowyerWatson(std::vector<Node> points){
 
-    setNeighbourPtrsToNewTriangles(newTr1, newTr2, newTr3, nodeInTriangle);
-    setNeighbourPtrsToNewTriangles(newTr2, newTr1, newTr3, nodeInTriangle);
-    setNeighbourPtrsToNewTriangles(newTr3, newTr1, newTr2, nodeInTriangle);
+    // TODO replacve Nodes to Points, add conversion from Points to Nodes
+    // TODO Change return type to vector of triangles?
 
-    // TODO
-}
-
-void triangulateBowyerWatson(std::vector<Node> points){
+    Edge* edgePtrs[3];
 
     std::vector<NodesEdgesTriangles> triangulation;
-    NodesEdgesTriangles supreTriangle = createSuperTriangle(points);
-    triangulation.push_back(supreTriangle);
+
+    if (points.size() <= 0){
+        return triangulation;
+    }
+
+    NodesEdgesTriangles superTriangle = createSuperTriangle(points);
+    triangulation.push_back(superTriangle);
 
     for (auto& point: points){
-        std::vector<NodesEdgesTriangles*> badTriangles;
-        std::vector<int> badIndexes;
-        int counter = 0;
-        for (auto& triang: triangulation){
-            if (!triang.delaunayCriteriaSatisfied(point)){
-                badTriangles.push_back(&triang);
-                badIndexes.push_back(counter);
-            }
-            counter++;
-        }
-        std::vector<Edge> polygon;
-        for (int i = 0; i < badTriangles.size(); i++){
-            bool flagAdd = true;
-            Edge addEdge;
-            for (int j = 0; j < badTriangles.size(); j++){
-                if (i == j)
-                    continue;
-                if (badTriangles[j]->findEqualEdge(badTriangles[i]->edge1)){
-                    flagAdd = false;
-                    addEdge = badTriangles[i]->edge1;
-                    break;
-                }
-                if (badTriangles[j]->findEqualEdge(badTriangles[i]->edge2)){
-                    flagAdd = false;
-                    addEdge = badTriangles[i]->edge2;
-                    break;
-                }
-                if (badTriangles[j]->findEqualEdge(badTriangles[i]->edge3)){
-                    addEdge = badTriangles[i]->edge3;
-                    flagAdd = false;
-                    break;
-                }
-            }
-            if (flagAdd){
-                polygon.push_back(addEdge);
-            }
-        }
-        std::reverse(badIndexes.begin(), badIndexes.end());
-        for (auto badIdx: badIndexes){
-            triangulation.erase(triangulation.begin() + badIdx);
-        }
-
-        for(auto& edge: polygon){
-            triangulation.push_back(NodesEdgesTriangles(*edge.nodePtrs[0], *edge.nodePtrs[1], point));
-        }
+        insertPointInTriangulation(point, triangulation);
     }
+
     // delete because of superTriangle
     std::vector<int> triangleIndexes;
     int counter = 0;
     for (auto& triangle: triangulation){
-        if (triangle.hasNode(supreTriangle.node1) || triangle.hasNode(supreTriangle.node2) || triangle.hasNode(supreTriangle.node3)){
+        if (triangle.hasNode(superTriangle.node1) || triangle.hasNode(superTriangle.node2) || triangle.hasNode(superTriangle.node3)){
             triangleIndexes.push_back(counter);
         }
         counter++;
@@ -152,5 +63,61 @@ void triangulateBowyerWatson(std::vector<Node> points){
     std::reverse(triangleIndexes.begin(), triangleIndexes.end());
     for (auto idx: triangleIndexes){
             triangulation.erase(triangulation.begin() + idx);
+    }
+
+    
+    std::cout << triangulation.size() << " triangles in triangulation" << std::endl;
+    // for (auto& tr: triangulation){
+    //     std::cout << tr.node1.x << " " << tr.node1.y << std::endl;
+    //     std::cout << tr.node2.x << " " << tr.node2.y << std::endl;
+    //     std::cout << tr.node3.x << " " << tr.node3.y << std::endl;
+    // }
+
+    return triangulation;
+}
+
+void insertPointInTriangulation(Node point, std::vector<NodesEdgesTriangles> &triangulation)
+{
+    Edge* edgePtrs[3] = {};
+
+    std::vector<NodesEdgesTriangles> badTriangles;
+    std::vector<int> badIndexes;
+    int counter = 0;
+    for (auto& triang: triangulation){
+        if (!triang.delaunayCriteriaSatisfied(point)){
+            badTriangles.push_back(triang);
+            badIndexes.push_back(counter);
+        }
+        counter++;
+    }
+    std::vector<Edge*> polygon;
+    for (int i = 0; i < badTriangles.size(); i++){
+        edgePtrs[0] = &badTriangles[i].edge1;
+        edgePtrs[1] = &badTriangles[i].edge2;
+        edgePtrs[2] = &badTriangles[i].edge3;
+        // foreach edge
+        for (int edgeIdx = 0; edgeIdx < 3; edgeIdx++){
+            bool flagAdd = true;
+            for (int j = 0; j < badTriangles.size(); j++){
+                if (i == j){
+                    continue;
+                }
+                if (badTriangles[j].findEqualEdge(*edgePtrs[edgeIdx]) != nullptr){
+                    flagAdd = false;
+                    break;
+                }
+            }
+            if (flagAdd){
+                polygon.push_back(edgePtrs[edgeIdx]);
+            }
+        }
+    }
+    std::reverse(badIndexes.begin(), badIndexes.end());
+    for (auto badIdx: badIndexes){
+        triangulation.erase(triangulation.begin() + badIdx);
+    }
+
+    for(auto& edge: polygon){
+        triangulation.push_back(NodesEdgesTriangles(*edge->nodePtrs[0], *edge->nodePtrs[1], point));
     }
 }

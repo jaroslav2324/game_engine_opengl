@@ -29,32 +29,70 @@ NodesEdgesTriangles::NodesEdgesTriangles(Node n1, Node n2, Node n3){
     node3 = n3;
 }
 
-// check using modified sum of opposite angles
+NodesEdgesTriangles::NodesEdgesTriangles(const NodesEdgesTriangles &copyThis){
+
+    node1 = copyThis.node1;
+    node2 = copyThis.node2;
+    node3 = copyThis.node3;
+
+    initInnerPointers();
+}
+
 bool NodesEdgesTriangles::delaunayCriteriaSatisfied(Node checkNode){
 
-    // cos a
-    float sa = (checkNode.x - node1.x) * (checkNode.x - node3.x) + (checkNode.y - node1.y) * (checkNode.y - node3.y);
-    // cos b
-    float sb = (node2.x - node1.x) * (node2.x - node3.x) + (node2.y - node1.y) * (node2.y - node3.y);
+    // TODO reduce overflow chance
 
-    if (sa < 0 && sb < 0){
-        return false;
-    }
+    // Find center and radius of bounding circle
+    float A = node2.x - node1.x;
+    float B = node2.y - node1.y;
+    float C = node3.x - node1.x;
+    float D = node3.y - node1.y;
+    float E = A * (node1.x + node2.x) + B * (node1.y + node2.y);
+    float F = C * (node1.x + node3.x) + D * (node1.y + node3.y);
+    float G = 2 * (A * (node3.y - node2.y) - B * (node3.x - node2.x));
 
-    if (sa >= 0 && sb >= 0){
-        return true;
-    }
+    float centerX = (D * E - B * F) / G;
+    float centerY = (A * F - C * E) / G;
 
-    float fullCalculation = (((checkNode.x - node1.x) * (checkNode.y - node3.y) - (checkNode.x - node3.x) * (checkNode.y - node1.y)) * sb) 
-                            + 
-                            (sa * ((node2.x - node1.x) * (node2.y - node3.y) - (node2.x - node3.x) * (node2.y - node1.y)));
+    float radius = sqrt((centerX - node1.x) * (centerX - node1.x) + (centerY - node1.y) * (centerY - node1.y));
 
-    if (fullCalculation >= 0){
-        return true;
-    }
-    else{
-        return false;
-    }
+    float distanceSquared = (checkNode.x - centerX) * (checkNode.x - centerX) + (checkNode.y - centerY) * (checkNode.y - centerY);
+
+    // Проверяем, находится ли точка внутри окружности
+    return !(distanceSquared < radius * radius);
+
+
+    //// change something to prevent overflow
+    // float denom = 1000000;
+    // // cos a
+    // float cosa = ((checkNode.x - node1.x) * (checkNode.x - node3.x) + (checkNode.y - node1.y) * (checkNode.y - node3.y)) / denom;
+    // // cos b
+    // float cosb = ((node2.x - node1.x) * (node2.x - node3.x) + (node2.y - node1.y) * (node2.y - node3.y)) / denom;
+
+    // std::cout << cosa << std::endl;
+    // std::cout << cosb << std::endl;
+    // std::cout << ((checkNode.x - node1.x) * (checkNode.y - node3.y) - (checkNode.x - node3.x) * (checkNode.y - node1.y)) / denom << std::endl;
+    // std::cout << ((node2.x - node1.x) * (node2.y - node3.y) - (node2.x - node3.x) * (node2.y - node1.y)) / denom << std::endl;
+
+    // if (cosa < 0 && cosb < 0){
+    //     return false;
+    // }
+
+    // if (cosa >= 0 && cosb >= 0){
+    //     return true;
+    // }
+
+    // float sina = ((checkNode.x - node1.x) * (checkNode.y - node3.y) - (checkNode.x - node3.x) * (checkNode.y - node1.y)) / denom;
+    // float sinb = ((node2.x - node1.x) * (node2.y - node3.y) - (node2.x - node3.x) * (node2.y - node1.y)) / denom;
+
+    // float fullCalculation = (sina * cosb)  + (cosa * sinb);
+
+    // if (fullCalculation >= 0){
+    //     return true;
+    // }
+    // else{
+    //     return false;
+    // }
 
 
 }
@@ -131,6 +169,13 @@ bool NodesEdgesTriangles::hasNode(Node &node)
     return false;
 }
 
+bool NodesEdgesTriangles::hasEdge(Edge &edge)
+{
+     if (edge == edge1 || edge == edge2 || edge == edge3)
+        return true;
+    return false;
+}
+
 bool Node::operator==(Node &node)
 {
     if (x == node.x && y == node.y)
@@ -159,4 +204,5 @@ int Edge::getFirstNullptrTriangleIdx()
         if (neighbourTriPtrs[i] == nullptr)
             return i;
     }
+    return -1;
 }
