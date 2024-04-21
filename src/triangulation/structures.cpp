@@ -136,8 +136,8 @@ Edge *NodesEdgesTriangles::findEqualEdge(Edge &edge)
         return &edge1;
     if (edge == edge2)
         return &edge2;
-    if (edge == edge2)
-        return &edge2;
+    if (edge == edge3)
+        return &edge3;
 
     return nullptr;
 }

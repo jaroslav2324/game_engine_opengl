@@ -3,6 +3,9 @@
 #include <cmath>
 #include <vector>
 #include <algorithm>
+#include <cstdlib>
+#include <ctime>
+
 
 #include "triangulation/triangulation.h"
 
@@ -12,7 +15,7 @@
 std::vector<Node> points = {
     {50.0f, 100.0f},
     {150.0f, 120.0f},
-    {350.0f, 300.0f},
+    {350.0f, 600.0f},
     {150.0f, 500.0f},
     {250.0f, 700.0f}
 };
@@ -63,6 +66,7 @@ void displayTriangulation(){
 
 
 void displayMe(void) {
+    std::cout << "display" << std::endl;
     glClear(GL_COLOR_BUFFER_BIT);
     displayTriangulation();
     glFlush();
@@ -90,8 +94,8 @@ void mouseClick(int button, int state, int x, int y) {
 
 int main(int argc, char** argv) {
 
-    //displayedTriangulation = triangulateBowyerWatson(points);
-    displayedTriangulation.push_back(createSuperTriangle(points));
+    displayedTriangulation = triangulateBowyerWatson(points);
+    //displayedTriangulation.push_back(createSuperTriangle(points));
 
     // Пример использования
     glutInit(&argc, argv);
@@ -102,7 +106,7 @@ int main(int argc, char** argv) {
     //glOrtho(-1, 1, -1, 1, -1, 1); // Установка ортографической проекции
     glutDisplayFunc(displayMe);
     glutIdleFunc(myIdleFunc);
-    glutMouseFunc(mouseClick);
+    //glutMouseFunc(mouseClick);
     glutMainLoop();
 
     return 0;

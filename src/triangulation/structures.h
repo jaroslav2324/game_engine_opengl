@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cmath>
 
-
 struct Node;
 struct Edge;
 struct Triangle;
