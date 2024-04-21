@@ -31,10 +31,12 @@ NodesEdgesTriangles createSuperTriangle(std::vector<Node> points)
 
 
 
-std::vector<NodesEdgesTriangles> triangulateBowyerWatson(std::vector<Node> points){
+std::vector<NodesEdgesTriangles> triangulateBowyerWatson(std::vector<Point2D> inPoints){
 
-    // TODO replacve Nodes to Points, add conversion from Points to Nodes
-    // TODO Change return type to vector of triangles?
+    std::vector<Node> points;
+    for (auto& inp: inPoints){
+        points.push_back(inp);
+    }
 
     Edge* edgePtrs[3];
 
@@ -66,7 +68,7 @@ std::vector<NodesEdgesTriangles> triangulateBowyerWatson(std::vector<Node> point
     }
 
     
-    std::cout << triangulation.size() << " triangles in triangulation" << std::endl;
+    //std::cout << triangulation.size() << " triangles in triangulation" << std::endl;
     // for (auto& tr: triangulation){
     //     std::cout << tr.node1.x << " " << tr.node1.y << std::endl;
     //     std::cout << tr.node2.x << " " << tr.node2.y << std::endl;
