@@ -12,13 +12,40 @@
 #define WIN_WIDTH 1000
 #define WIN_HEIGHT 800
 
-std::vector<Node> points = {
+ #define RANDOM_TRIANG_POINTS_TEST true
+
+
+float randomFloat(float min, float max) {
+    return min + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (max - min)));
+}
+
+
+std::vector<Node> generateRandomPoints(int numPoints, float minX, float maxX, float minY, float maxY) {
+    
+    std::vector<Node> randomPoints;
+    Node tempPoint;
+
+    srand(time(0));
+
+    for (int i = 0; i < numPoints; ++i) {
+        tempPoint.x = randomFloat(minX, maxX);
+        tempPoint.y = randomFloat(minY, maxY);
+        randomPoints.push_back(tempPoint);
+    }
+
+    return randomPoints;
+}
+
+std::vector<Node> points;
+/*
+= {
     {50.0f, 100.0f},
     {150.0f, 120.0f},
     {350.0f, 600.0f},
     {150.0f, 500.0f},
     {250.0f, 700.0f}
 };
+*/
 
 int nextPointIdx = 0;
 
@@ -36,7 +63,7 @@ Node coordsToNormed(Node& node){
 std::vector<NodesEdgesTriangles> displayedTriangulation;
 
 void displayTriangulation(){
-   glColor3f(1.0f, 0.0f, 0.0f); // red
+   glColor3f(0.7f, 0.7f, 0.0f); 
    glBegin(GL_TRIANGLES);
    for (auto& tr: displayedTriangulation){
         auto normN1 = coordsToNormed(tr.node1);
@@ -77,6 +104,13 @@ void myIdleFunc(){
 }
 
 void mouseClick(int button, int state, int x, int y) {
+
+    if(RANDOM_TRIANG_POINTS_TEST){
+        points = generateRandomPoints(100, 50, WIN_WIDTH - 50, 50, WIN_HEIGHT - 50);
+        displayedTriangulation = triangulateBowyerWatson(points);
+        glutPostRedisplay();
+    }
+
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
         std::cout << "left mouse butoon pressed" << std::endl;
 
@@ -94,6 +128,7 @@ void mouseClick(int button, int state, int x, int y) {
 
 int main(int argc, char** argv) {
 
+    points = generateRandomPoints(100, 50, WIN_WIDTH - 50, 50, WIN_HEIGHT - 50);
     displayedTriangulation = triangulateBowyerWatson(points);
     //displayedTriangulation.push_back(createSuperTriangle(points));
 
@@ -106,7 +141,7 @@ int main(int argc, char** argv) {
     //glOrtho(-1, 1, -1, 1, -1, 1); // Установка ортографической проекции
     glutDisplayFunc(displayMe);
     glutIdleFunc(myIdleFunc);
-    //glutMouseFunc(mouseClick);
+    glutMouseFunc(mouseClick);
     glutMainLoop();
 
     return 0;
