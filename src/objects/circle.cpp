@@ -1,24 +1,6 @@
 #include "circle.h"
 
-//TODO remove
-float randomFloat(float min, float max) {
-    return min + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (max - min)));
-}
 
-//TODO remove
-std::vector<Point2D> generateRandomPoints(int numPoints, Point2D center, float minX, float maxX, float minY, float maxY) {
-    
-    std::vector<Point2D> randomPoints;
-    Point2D tempPoint;
-
-    for (int i = 0; i < numPoints; ++i) {
-        tempPoint.x = center.x + randomFloat(minX, maxX);
-        tempPoint.y = center.y + randomFloat(minY, maxY);
-        randomPoints.push_back(tempPoint);
-    }
-
-    return randomPoints;
-}
 
 std::vector<Point2D> Circle::generatePointsOnCircle(int num_points) {
     std::vector<Point2D> points;
@@ -38,6 +20,13 @@ Circle::Circle(Renderer* renderer, Point2D center, float radius){
 
     this->center = center;
     this->radius = radius;
+    color.r = 0.7f;
+    color.g = 0.7f;
+    color.b = 0.7f;
+    edgesColor.r = 1.0f;
+    edgesColor.g = 1.0f;
+    edgesColor.b = 1.0f;
+
     std::vector<Point2D> points;
     points = generatePointsOnCircle(16);//generateRandomPoints(10, center, -100, 100, -100, 100);
     points.push_back(center);
@@ -67,4 +56,20 @@ Circle::Circle(Renderer* renderer, Point2D center, float radius){
 
 std::vector<NodesEdgesTriangles> &Circle::getRenderedTriangles(){
     return renderedTriangles;
+}
+
+void Circle::setCircleColor(ColorRGB &color){
+    this->color = color;
+}
+
+void Circle::setEdgesColor(ColorRGB &color){
+    this->edgesColor = color;
+}
+
+ColorRGB Circle::getCircleColor(){
+    return color;
+}
+
+ColorRGB Circle::getEdgesColor(){
+    return edgesColor;
 }

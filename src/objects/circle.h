@@ -6,6 +6,7 @@
 #include "../triangulation/structures.h"
 #include "../triangulation/triangulation.h"
 #include "../maths/Point2D.h"
+#include "../utils/Color.h"
 
 class Renderer;
 
@@ -23,6 +24,11 @@ class Circle{
 
     std::vector<NodesEdgesTriangles>& getRenderedTriangles();
     // TODO add circle points and setter
+    void setCircleColor(ColorRGB& color);
+    void setEdgesColor(ColorRGB& color);
+    ColorRGB getCircleColor();
+    ColorRGB getEdgesColor();
+
 
     private:
 
@@ -31,4 +37,7 @@ class Circle{
     Point2D center;
     float radius;
     std::vector<NodesEdgesTriangles> renderedTriangles;
+    ColorRGB color;
+    ColorRGB edgesColor;
+
 };

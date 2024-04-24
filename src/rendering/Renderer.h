@@ -16,12 +16,14 @@ class Renderer{
     Renderer(int winWidth, int winHeight): winWidth(winWidth), winHeight(winHeight){};
 
     void render();
+    void renderTriangles(std::vector<NodesEdgesTriangles>& triangles);    
 
     void addCircleToPtrs(Circle* circle);
     void removeCircleFromPtrs(Circle* circle);
 
     private:
 
+    void setOpenGLColor(ColorRGB& color);
     void drawCircles();
     void drawCircle(Circle* circle);
     void drawTriangs(std::vector<NodesEdgesTriangles>& trianglesVec);

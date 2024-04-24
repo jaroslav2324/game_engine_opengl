@@ -6,6 +6,15 @@ void Renderer::render(){
     glFlush();
 }
 
+void Renderer::renderTriangles(std::vector<NodesEdgesTriangles>& triangles){
+    glClear(GL_COLOR_BUFFER_BIT);
+    glColor3f(0.7f, 0.0f, 0.7f);
+    drawTriangs(triangles);
+    glColor3f(0.0f, 0.7f, 0.7f);
+    drawEdges(triangles);
+    glFlush();
+}
+
 void Renderer::addCircleToPtrs(Circle *circle)
 {
     circlePtrs.push_back(circle);
@@ -13,6 +22,10 @@ void Renderer::addCircleToPtrs(Circle *circle)
 
 void Renderer::removeCircleFromPtrs(Circle *circle){
     circlePtrs.erase(std::remove(circlePtrs.begin(), circlePtrs.end(), circle), circlePtrs.end());
+}
+
+void Renderer::setOpenGLColor(ColorRGB &color){
+    glColor3f(color.r, color.g, color.b);
 }
 
 void Renderer::drawCircles()
@@ -26,11 +39,11 @@ void Renderer::drawCircles()
 
 void Renderer::drawCircle(Circle *circle)
 {
-    //TODO set circle color from circle
-    glColor3f(0.7f, 0.7f, 0.0f); 
+    ColorRGB color = circle->getCircleColor();
+    setOpenGLColor(color);
     drawTriangs(circle->getRenderedTriangles());
-    //TODO set edge colour from circle
-    glColor3f(1.0f, 1.0f, 0.0f);
+    ColorRGB edgeColor = circle->getEdgesColor();
+    setOpenGLColor(edgeColor);
     // TODO add flag if edge drawing is needed
     drawEdges(circle->getRenderedTriangles());
 }

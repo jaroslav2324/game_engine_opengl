@@ -6,9 +6,8 @@
 #include <cstdlib>
 #include <ctime>
 
-
-#include "triangulation/triangulation.h"
 #include "rendering/Renderer.h"
+#include "utils/randomGeneration.h"
 
 #define WIN_WIDTH 1000
 #define WIN_HEIGHT 800
@@ -17,28 +16,12 @@
 
 Renderer renderer(WIN_WIDTH, WIN_HEIGHT);
 
-// // maps pixel coords to -1 to 1 (physical coords to viewport coords)
-// Node coordsToNormed(Node& node){
-
-//     Node normedNode;
-//     // 0 - min value
-//     normedNode.x = -1.0 + 2.0 * (node.x - 0) / (WIN_WIDTH - 0);
-//     normedNode.y =  2 * (1 - ((node.y - 0) / (WIN_HEIGHT - 0))) - 1;
-//     return normedNode;
-// }
-
-std::vector<NodesEdgesTriangles> displayedTriangulation;
-Circle cir1(&renderer, Point2D(200, 200), 100);
-
-
-
 
 void displayMe(void) {
-    std::cout << "display" << std::endl;
-    //glClear(GL_COLOR_BUFFER_BIT);
-    //cir1.debug_insertNextPointInTriang(); 
-    //glColor3f(1.0f, 1.0f, 1.0f);  
-    //glFlush();
+    // std::cout << "display" << std::endl;
+    // auto points = generateRandomPoints(100, Point2D(500, 400), -450, 450, -350, 350);
+    // auto triangles = triangulateBowyerWatson(points);
+    // renderer.renderTriangles(triangles);
     renderer.render();
 }
 
@@ -48,22 +31,8 @@ void myIdleFunc(){
 
 void mouseClick(int button, int state, int x, int y) {
 
-    // if(RANDOM_TRIANG_POINTS_TEST){
-    //     points = generateRandomPoints(100, 50, WIN_WIDTH - 50, 50, WIN_HEIGHT - 50);
-    //     displayedTriangulation = triangulateBowyerWatson(points);
-    //     glutPostRedisplay();
-    // }
-
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
         std::cout << "left mouse butoon pressed" << std::endl;
-
-
-        // if (nextPointIdx >= points.size()){
-        //     return;
-        // }
-
-        // insertPointInTriangulation(Node(points[nextPointIdx]), displayedTriangulation);
-        // nextPointIdx++;
 
         glutPostRedisplay();
     }
@@ -72,8 +41,12 @@ void mouseClick(int button, int state, int x, int y) {
 
 int main(int argc, char** argv) {
 
-
+    Circle cir1(&renderer, Point2D(200, 200), 100);
     Circle cir2(&renderer, Point2D(600, 600), 200);
+
+    ColorRGB color;
+    cir1.setCircleColor(color(1.0f, 0.0f, 0.0f));
+    cir2.setCircleColor(color(0.0f, 1.0f, 0.0f));
 
     renderer.addCircleToPtrs(&cir1);
     renderer.addCircleToPtrs(&cir2);
@@ -84,7 +57,6 @@ int main(int argc, char** argv) {
     glutInitWindowSize(WIN_WIDTH, WIN_HEIGHT);
     glutInitWindowPosition(200, 200);
     glutCreateWindow("");
-    //glOrtho(-1, 1, -1, 1, -1, 1); // Установка ортографической проекции
     glutDisplayFunc(displayMe);
     glutIdleFunc(myIdleFunc);
     glutMouseFunc(mouseClick);
