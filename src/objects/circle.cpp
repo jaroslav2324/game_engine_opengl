@@ -16,7 +16,8 @@ std::vector<Point2D> Circle::generatePointsOnCircle(int num_points) {
     return points;
 }
 
-Circle::Circle(Renderer* renderer, Point2D center, float radius){
+Circle::Circle(Renderer* renderer, Point2D center, float radius): 
+collisionShape(center, radius){
 
     this->center = center;
     this->radius = radius;
@@ -72,4 +73,8 @@ ColorRGB Circle::getCircleColor(){
 
 ColorRGB Circle::getEdgesColor(){
     return edgesColor;
+}
+
+CircleCollisionShape &Circle::getCollisionShape(){
+    return collisionShape;
 }

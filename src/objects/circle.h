@@ -7,6 +7,7 @@
 #include "../triangulation/triangulation.h"
 #include "../maths/Point2D.h"
 #include "../utils/Color.h"
+#include "../physics/CircleCollisionShape.h"
 
 class Renderer;
 
@@ -28,7 +29,7 @@ class Circle{
     void setEdgesColor(ColorRGB& color);
     ColorRGB getCircleColor();
     ColorRGB getEdgesColor();
-
+    CircleCollisionShape& getCollisionShape();
 
     private:
 
@@ -39,5 +40,7 @@ class Circle{
     std::vector<NodesEdgesTriangles> renderedTriangles;
     ColorRGB color;
     ColorRGB edgesColor;
+
+    CircleCollisionShape collisionShape;
 
 };

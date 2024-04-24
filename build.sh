@@ -6,4 +6,7 @@ g++ -g src/main.cpp \
  src/objects/circle.cpp \
  src/utils/randomGeneration.cpp \
   src/utils/Color.cpp \
+  src/physics/CollisionShape.cpp \
+  src/physics/CircleCollisionShape.cpp \
+  src/physics/ColisionManager.cpp \
  -o collisionEngine -lglut -lGLU -lGL

@@ -8,6 +8,7 @@
 
 #include "rendering/Renderer.h"
 #include "utils/randomGeneration.h"
+#include "physics/CollisionManager.h"
 
 #define WIN_WIDTH 1000
 #define WIN_HEIGHT 800
@@ -41,8 +42,12 @@ void mouseClick(int button, int state, int x, int y) {
 
 int main(int argc, char** argv) {
 
+    CollisionManager collisionManager;
+
     Circle cir1(&renderer, Point2D(200, 200), 100);
     Circle cir2(&renderer, Point2D(600, 600), 200);
+
+    std::cout << collisionManager.checkCircleCircleIntersection(cir1, cir2) << std::endl;
 
     ColorRGB color;
     cir1.setCircleColor(color(1.0f, 0.0f, 0.0f));
