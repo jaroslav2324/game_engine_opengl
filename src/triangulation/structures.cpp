@@ -23,13 +23,16 @@ void NodesEdgesTriangles::initInnerPointers(){
 
 
 NodesEdgesTriangles::NodesEdgesTriangles(Node n1, Node n2, Node n3){
-    initInnerPointers();
+    
     node1 = n1;
     node2 = n2;
     node3 = n3;
+    initInnerPointers();
 }
 
 NodesEdgesTriangles::NodesEdgesTriangles(const NodesEdgesTriangles &copyThis){
+
+    //std::cout << "NodesEdgesTriangles copy constructor called" << std::endl;
 
     node1 = copyThis.node1;
     node2 = copyThis.node2;
@@ -42,59 +45,31 @@ bool NodesEdgesTriangles::delaunayCriteriaSatisfied(Node checkNode){
 
     // TODO reduce overflow chance
 
-    // Find center and radius of bounding circle
-    float A = node2.x - node1.x;
-    float B = node2.y - node1.y;
-    float C = node3.x - node1.x;
-    float D = node3.y - node1.y;
-    float E = A * (node1.x + node2.x) + B * (node1.y + node2.y);
-    float F = C * (node1.x + node3.x) + D * (node1.y + node3.y);
-    float G = 2 * (A * (node3.y - node2.y) - B * (node3.x - node2.x));
+    auto& A = node1;
+    auto& B = node2;
+    auto& C = node3;
+    auto D = 2 * (A.x * (B.y - C.y) + B.x *(C.y - A.y) + C.x * (A.y - B.y));
+    Node center;
+    center.x = ((A.x * A.x + A.y * A.y) * (B.y - C.y) +
+                (B.x * B.x + B.y * B.y) * (C.y - A.y) +
+                (C.x * C.x + C.y * C.y) * (A.y - B.y)) / D;
+    center.y = ((A.x * A.x + A.y * A.y) * (C.x - B.x) +
+                (B.x * B.x + B.y * B.y) * (A.x - C.x) +
+                (C.x * C.x + C.y * C.y) * (B.x - A.x)) / D;
 
-    float centerX = (D * E - B * F) / G;
-    float centerY = (A * F - C * E) / G;
+    float radius = sqrt((A.x - center.x) * (A.x - center.x) + (A.y - center.y) * (A.y - center.y));
 
-    float radius = sqrt((centerX - node1.x) * (centerX - node1.x) + (centerY - node1.y) * (centerY - node1.y));
+    float distanceSquared = (checkNode.x - center.x) * (checkNode.x - center.x) + (checkNode.y - center.y) * (checkNode.y - center.y);
 
-    float distanceSquared = (checkNode.x - centerX) * (checkNode.x - centerX) + (checkNode.y - centerY) * (checkNode.y - centerY);
+    float epsilon = 1.0;
 
-    // Проверяем, находится ли точка внутри окружности
-    return !(distanceSquared < radius * radius);
+    if (std::abs(distanceSquared - radius * radius ) < epsilon)
+        return false;
 
+    if (distanceSquared < radius * radius)
+        return false;
 
-    //// change something to prevent overflow
-    // float denom = 1000000;
-    // // cos a
-    // float cosa = ((checkNode.x - node1.x) * (checkNode.x - node3.x) + (checkNode.y - node1.y) * (checkNode.y - node3.y)) / denom;
-    // // cos b
-    // float cosb = ((node2.x - node1.x) * (node2.x - node3.x) + (node2.y - node1.y) * (node2.y - node3.y)) / denom;
-
-    // std::cout << cosa << std::endl;
-    // std::cout << cosb << std::endl;
-    // std::cout << ((checkNode.x - node1.x) * (checkNode.y - node3.y) - (checkNode.x - node3.x) * (checkNode.y - node1.y)) / denom << std::endl;
-    // std::cout << ((node2.x - node1.x) * (node2.y - node3.y) - (node2.x - node3.x) * (node2.y - node1.y)) / denom << std::endl;
-
-    // if (cosa < 0 && cosb < 0){
-    //     return false;
-    // }
-
-    // if (cosa >= 0 && cosb >= 0){
-    //     return true;
-    // }
-
-    // float sina = ((checkNode.x - node1.x) * (checkNode.y - node3.y) - (checkNode.x - node3.x) * (checkNode.y - node1.y)) / denom;
-    // float sinb = ((node2.x - node1.x) * (node2.y - node3.y) - (node2.x - node3.x) * (node2.y - node1.y)) / denom;
-
-    // float fullCalculation = (sina * cosb)  + (cosa * sinb);
-
-    // if (fullCalculation >= 0){
-    //     return true;
-    // }
-    // else{
-    //     return false;
-    // }
-
-
+    return true;
 }
 
 bool NodesEdgesTriangles::nodeInTriangle(Node checkNode){
@@ -178,16 +153,13 @@ bool NodesEdgesTriangles::hasEdge(Edge &edge)
 
 bool Node::operator==(Node &node)
 {
-    if (x == node.x && y == node.y)
-        return true;
-    return false;
+    float epsilon = 1.0e-3;
+    return (std::abs(x - node.x) < epsilon) && (std::abs(y - node.y) < epsilon);
 }
 
 bool Node::operator!=(Node &node)
 {
-    if (x == node.x && y == node.y)
-        return false;
-    return true;
+    return !operator==(node);
 }
 
 bool Edge::operator==(Edge &edge)
@@ -205,4 +177,32 @@ int Edge::getFirstNullptrTriangleIdx()
             return i;
     }
     return -1;
+}
+
+EdgeWithNodes::EdgeWithNodes(Edge &edge){
+    node1 = *edge.nodePtrs[0];
+    node2 = *edge.nodePtrs[1];
+}
+
+bool EdgeWithNodes::operator==(EdgeWithNodes &edge)
+{
+    if (((node1 == edge.node1) && (node2 == edge.node2)) || 
+    ((node1 == edge.node2) && (node2 == edge.node1)))
+        return true;
+    return false;
+}
+
+NodesEdgesTriangles& NodesEdgesTriangles::operator=(const NodesEdgesTriangles& other) {
+
+// std::cout << "NodesEdgesTriangles operator= called" << std::endl;
+
+    if (this != &other) { 
+
+        node1 = other.node1;
+        node2 = other.node2;
+        node3 = other.node3;
+        initInnerPointers();
+        isBad = other.isBad;
+    }
+    return *this;
 }

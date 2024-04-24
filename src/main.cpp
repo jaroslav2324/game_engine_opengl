@@ -28,12 +28,17 @@ Renderer renderer(WIN_WIDTH, WIN_HEIGHT);
 // }
 
 std::vector<NodesEdgesTriangles> displayedTriangulation;
+Circle cir1(&renderer, Point2D(200, 200), 100);
 
 
 
 
 void displayMe(void) {
     std::cout << "display" << std::endl;
+    //glClear(GL_COLOR_BUFFER_BIT);
+    //cir1.debug_insertNextPointInTriang(); 
+    //glColor3f(1.0f, 1.0f, 1.0f);  
+    //glFlush();
     renderer.render();
 }
 
@@ -49,25 +54,26 @@ void mouseClick(int button, int state, int x, int y) {
     //     glutPostRedisplay();
     // }
 
-    // if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-    //     std::cout << "left mouse butoon pressed" << std::endl;
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+        std::cout << "left mouse butoon pressed" << std::endl;
 
-    //     if (nextPointIdx >= points.size()){
-    //         return;
-    //     }
 
-    //     insertPointInTriangulation(Node(points[nextPointIdx]), displayedTriangulation);
-    //     nextPointIdx++;
+        // if (nextPointIdx >= points.size()){
+        //     return;
+        // }
 
-    //     glutPostRedisplay();
-    // }
+        // insertPointInTriangulation(Node(points[nextPointIdx]), displayedTriangulation);
+        // nextPointIdx++;
+
+        glutPostRedisplay();
+    }
 }
 
 
 int main(int argc, char** argv) {
 
-    Circle cir1(&renderer, Point2D(200, 200));
-    Circle cir2(&renderer, Point2D(600, 600));
+
+    Circle cir2(&renderer, Point2D(600, 600), 200);
 
     renderer.addCircleToPtrs(&cir1);
     renderer.addCircleToPtrs(&cir2);

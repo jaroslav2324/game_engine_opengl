@@ -20,12 +20,50 @@ std::vector<Point2D> generateRandomPoints(int numPoints, Point2D center, float m
     return randomPoints;
 }
 
-Circle::Circle(Renderer* renderer, Point2D center){
+std::vector<Point2D> Circle::generatePointsOnCircle(int num_points) {
+    std::vector<Point2D> points;
+    float angle_increment = 2 * M_PI / num_points;
+
+    for (int i = 0; i < num_points; ++i) {
+        float angle = i * angle_increment;
+        float x = center.x + radius * cos(angle);
+        float y = center.y + radius * sin(angle);
+        points.push_back(Point2D(x, y));
+    }
+
+    return points;
+}
+
+Circle::Circle(Renderer* renderer, Point2D center, float radius){
 
     this->center = center;
-    auto points = generateRandomPoints(10, center, -100, 100, -100, 100);
+    this->radius = radius;
+    std::vector<Point2D> points;
+    points = generatePointsOnCircle(16);//generateRandomPoints(10, center, -100, 100, -100, 100);
+    points.push_back(center);
     renderedTriangles = triangulateBowyerWatson(points);
 }
+
+// void Circle::debug_insertNextPointInTriang(){
+
+//     auto tmpTr = renderedTriangles;
+
+//     if (debug_stage == 0){
+//         debug_IdxNextRenderedPoint++;
+//         debug_renderedPoints.push_back(debug_allPoints[debug_IdxNextRenderedPoint]);
+//     }
+
+//     tmpTr = debug_triangulateBowyerWatson(debug_renderedPoints, debug_stage);
+
+//     if (debug_stage == 3){
+//         renderedTriangles = tmpTr;
+//         std::cout << renderedTriangles.size();
+//     }
+
+//     debug_stage = (debug_stage + 1) % 4;
+    
+//     //renderedTriangles = triangulateBowyerWatson(debug_renderedPoints);
+// }
 
 std::vector<NodesEdgesTriangles> &Circle::getRenderedTriangles(){
     return renderedTriangles;
