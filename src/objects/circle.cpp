@@ -1,8 +1,58 @@
 #include "circle.h"
 
+// Function to apply velocity to the circle and update its position
+void Circle::applyVelocity(float dt){
 
+    if (physicsParameters.staticBody == true){
+        physicsParameters.velocityVector.x = 0;
+        physicsParameters.velocityVector.y = 0;
+        return;
+    }
 
-std::vector<Point2D> Circle::generatePointsOnCircle(int num_points) {
+    center.x += physicsParameters.velocityVector.x * dt;
+    center.y += physicsParameters.velocityVector.y * dt;
+
+    auto collisionCenter = collisionShape.getPosition();
+    collisionCenter.x += physicsParameters.velocityVector.x * dt;
+    collisionCenter.y += physicsParameters.velocityVector.y * dt;
+    collisionShape.setPosition(collisionCenter);
+
+    // Update the rendered triangles
+    for (auto& tr: renderedTriangles){
+        tr.node1.x += physicsParameters.velocityVector.x * dt;
+        tr.node1.y += physicsParameters.velocityVector.y * dt;
+        tr.node2.x += physicsParameters.velocityVector.x * dt;
+        tr.node2.y += physicsParameters.velocityVector.y * dt;
+        tr.node3.x += physicsParameters.velocityVector.x * dt;
+        tr.node3.y += physicsParameters.velocityVector.y * dt;
+    }
+}
+
+void Circle::applyGravity(float dt){
+    physicsParameters.forceVector.y += G * physicsParameters.mass * physicsParameters.gravityScale * dt;
+}
+
+void Circle::applyForces(float dt)
+{
+    if (physicsParameters.staticBody == true){
+        physicsParameters.forceVector.x = 0;
+        physicsParameters.forceVector.y = 0;
+        return;
+    }
+    // change velocity based on force
+    physicsParameters.velocityVector.x += physicsParameters.forceVector.x * dt;
+    physicsParameters.velocityVector.y += physicsParameters.forceVector.y * dt;
+
+    // reset force vector
+
+    physicsParameters.forceVector.x = 0;
+    physicsParameters.forceVector.y = 0;
+    applyGravity(dt);
+    // apply other forces
+}
+
+std::vector<Point2D> Circle::generatePointsOnCircle(int num_points)
+{
     std::vector<Point2D> points;
     float angle_increment = 2 * M_PI / num_points;
 
@@ -16,7 +66,7 @@ std::vector<Point2D> Circle::generatePointsOnCircle(int num_points) {
     return points;
 }
 
-Circle::Circle(Renderer* renderer, Point2D center, float radius): 
+Circle::Circle(Point2D center, float radius): 
 collisionShape(center, radius){
 
     this->center = center;
@@ -33,27 +83,6 @@ collisionShape(center, radius){
     points.push_back(center);
     renderedTriangles = triangulateBowyerWatson(points);
 }
-
-// void Circle::debug_insertNextPointInTriang(){
-
-//     auto tmpTr = renderedTriangles;
-
-//     if (debug_stage == 0){
-//         debug_IdxNextRenderedPoint++;
-//         debug_renderedPoints.push_back(debug_allPoints[debug_IdxNextRenderedPoint]);
-//     }
-
-//     tmpTr = debug_triangulateBowyerWatson(debug_renderedPoints, debug_stage);
-
-//     if (debug_stage == 3){
-//         renderedTriangles = tmpTr;
-//         std::cout << renderedTriangles.size();
-//     }
-
-//     debug_stage = (debug_stage + 1) % 4;
-    
-//     //renderedTriangles = triangulateBowyerWatson(debug_renderedPoints);
-// }
 
 std::vector<NodesEdgesTriangles> &Circle::getRenderedTriangles(){
     return renderedTriangles;
@@ -77,4 +106,10 @@ ColorRGB Circle::getEdgesColor(){
 
 CircleCollisionShape &Circle::getCollisionShape(){
     return collisionShape;
+}
+
+void Circle::applyPhysics(float dt)
+{
+    applyVelocity(dt);
+    applyForces(dt);
 }

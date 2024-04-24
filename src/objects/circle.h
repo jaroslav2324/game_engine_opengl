@@ -8,14 +8,13 @@
 #include "../maths/Point2D.h"
 #include "../utils/Color.h"
 #include "../physics/CircleCollisionShape.h"
-
-class Renderer;
+#include "../physics/PhysicsParameters.h"
 
 
 class Circle{
     public:
 
-    Circle(Renderer* renderer, Point2D center, float radius);
+    Circle(Point2D center, float radius);
 
     // int debug_stage = 0;
     // int debug_IdxNextRenderedPoint = -1;
@@ -31,7 +30,14 @@ class Circle{
     ColorRGB getEdgesColor();
     CircleCollisionShape& getCollisionShape();
 
+    void applyPhysics(float dt);
+
     private:
+
+    void applyVelocity (float dt);
+    void applyGravity (float dt);
+    void applyForces (float dt);
+
 
     std::vector<Point2D> generatePointsOnCircle(int num_points);
 
@@ -42,5 +48,5 @@ class Circle{
     ColorRGB edgesColor;
 
     CircleCollisionShape collisionShape;
-
+    PhysicsParameters physicsParameters;
 };

@@ -16,6 +16,7 @@ public:
     virtual AABB getAABB() = 0;
     CollisionShapeTypes getShapeType();
     Point2D getPosition();
+    void setPosition(Point2D& position);
 protected:
     Point2D position;
     CollisionShapeTypes shapeType = CollisionShapeTypes::UNDEFINED;

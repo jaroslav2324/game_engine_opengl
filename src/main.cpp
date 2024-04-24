@@ -17,6 +17,9 @@
 
 Renderer renderer(WIN_WIDTH, WIN_HEIGHT);
 
+Circle cir1(Point2D(200, 200), 100);
+Circle cir2(Point2D(600, 600), 200);
+
 
 void displayMe(void) {
     // std::cout << "display" << std::endl;
@@ -39,15 +42,27 @@ void mouseClick(int button, int state, int x, int y) {
     }
 }
 
+void timerCallback60sec(int value){
+
+    cir1.applyPhysics(1.0f/60) ;
+    cir2.applyPhysics(1.0f/60) ;
+
+
+    glutTimerFunc(1.0f/60, timerCallback60sec, 123);
+}
+
+void timerCallback30sec(int value){
+
+    glutPostRedisplay();
+    glutTimerFunc(1.0f/30, timerCallback30sec, 123);
+}
+
 
 int main(int argc, char** argv) {
 
     CollisionManager collisionManager;
 
-    Circle cir1(&renderer, Point2D(200, 200), 100);
-    Circle cir2(&renderer, Point2D(600, 600), 200);
-
-    std::cout << collisionManager.checkCircleCircleIntersection(cir1, cir2) << std::endl;
+    // std::cout << collisionManager.checkCircleCircleIntersection(cir1, cir2) << std::endl;
 
     ColorRGB color;
     cir1.setCircleColor(color(1.0f, 0.0f, 0.0f));
@@ -64,6 +79,8 @@ int main(int argc, char** argv) {
     glutCreateWindow("");
     glutDisplayFunc(displayMe);
     glutIdleFunc(myIdleFunc);
+    glutTimerFunc(0, timerCallback60sec, 123);
+    glutTimerFunc(0, timerCallback30sec, 123);
     glutMouseFunc(mouseClick);
     glutMainLoop();
 
