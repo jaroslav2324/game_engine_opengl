@@ -1,6 +1,5 @@
 #include "CollisionManager.h"
 
-//template <typename T1, typename T2>
 bool CollisionManager::checkAABBintersection(const AABB &a, const AABB &b){
 
     if (a.x > b.x + b.w || a.x + a.w < b.x || a.y > b.y + b.h || a.y + a.h < b.y)
@@ -8,7 +7,6 @@ bool CollisionManager::checkAABBintersection(const AABB &a, const AABB &b){
     return true;
 }
 
-//template <typename T1, typename T2>
 bool CollisionManager::checkCircleCircleIntersection(Circle &obj1, Circle &obj2){
     CircleCollisionShape* shape1 = dynamic_cast<CircleCollisionShape*>(obj1.getCollisionShape());
     CircleCollisionShape* shape2 = dynamic_cast<CircleCollisionShape*>(obj2.getCollisionShape());

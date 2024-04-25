@@ -18,7 +18,7 @@ public:
     Point2D getPosition();
     void setPosition(Point2D& position);
 protected:
-    Point2D position;
+    Point2D position; // center
     CollisionShapeTypes shapeType = CollisionShapeTypes::UNDEFINED;
 
 };

@@ -9,7 +9,7 @@ public:
     };
     float getRadius();
     void setRadius(float radius);
-    AABB getAABB();
+    virtual AABB getAABB();
 
     protected:
     float radius;

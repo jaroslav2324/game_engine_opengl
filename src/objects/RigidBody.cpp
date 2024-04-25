@@ -68,6 +68,14 @@ void RigidBody::destroyCollisionShape(){
     }
 }
 
+void RigidBody::setPhysicsParameters(PhysicsParameters &physicsParameters){
+    this->physicsParameters = physicsParameters;
+}
+
+PhysicsParameters &RigidBody::getPhysicsParameters(){
+    return physicsParameters;
+}
+
 void RigidBody::applyPhysics(float dt)
 {
     applyVelocity(dt);

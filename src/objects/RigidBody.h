@@ -14,6 +14,8 @@ class RigidBody{
     void setCollisionShape (CollisionShape* collisionShape);
     CollisionShape* getCollisionShape();
     void destroyCollisionShape ();
+    void setPhysicsParameters (PhysicsParameters& physicsParameters);
+    PhysicsParameters& getPhysicsParameters();
 
     virtual void updateRenderedItemsPosition (float dx, float  dy) = 0;
     void applyPhysics(float dt);
