@@ -27,6 +27,7 @@ void displayMe(void) {
     // auto triangles = triangulateBowyerWatson(points);
     // renderer.renderTriangles(triangles);
     renderer.render();
+    glutSwapBuffers();
 }
 
 void myIdleFunc(){

@@ -5,7 +5,7 @@
 
 #include <GL/glut.h>
 
-#include "../objects/circle.h"
+#include "../objects/Circle.h"
 #include "../triangulation/structures.h"
 
 

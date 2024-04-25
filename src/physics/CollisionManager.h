@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../objects/circle.h"
+#include "../objects/Circle.h"
 
 
 class CollisionManager{
