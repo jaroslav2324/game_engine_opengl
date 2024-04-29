@@ -29,7 +29,7 @@ void displayMe(void) {
     // auto triangles = triangulateBowyerWatson(points);
     // renderer.renderTriangles(triangles);
     renderer.render();
-    glutSwapBuffers();
+    //glutSwapBuffers();
 }
 
 void myIdleFunc(){
@@ -41,24 +41,30 @@ void mouseClick(int button, int state, int x, int y) {
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
         std::cout << "left mouse butoon pressed" << std::endl;
 
-        glutPostRedisplay();
+        //glutPostRedisplay();
     }
 }
 
-void timerCallback60sec(int value){
+// void timerCallback60sec(int value){
 
-    cir1.applyPhysics(1.0f/60) ;
-    cir2.applyPhysics(1.0f/60) ;
-    rect1.applyPhysics(1.0f/60) ;
+//     cir1.applyPhysics(1.0f/60) ;
+//     cir2.applyPhysics(1.0f/60) ;
+//     rect1.applyPhysics(1.0f/60) ;
 
 
-    glutTimerFunc(1.0f/60, timerCallback60sec, 123);
-}
+//     glutTimerFunc(1.0f/60, timerCallback60sec, 123);
+// }
 
 void timerCallback30sec(int value){
 
+    cir1.applyPhysics(1.0f/30) ;
+    cir2.applyPhysics(1.0f/30) ;
+    // auto c = cir1.getCenter();
+    // std::cout << "cir1 center: " << c.x << " " << c.y << std::endl;
+    rect1.applyPhysics(1.0f/30) ;
+
     glutPostRedisplay();
-    glutTimerFunc(1.0f/30, timerCallback30sec, 123);
+    glutTimerFunc(16, timerCallback30sec, 123);
 }
 
 
@@ -81,13 +87,14 @@ int main(int argc, char** argv) {
     // Пример использования
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE);
+    //glutInitDisplayMode(GLUT_DOUBLE);
     glutInitWindowSize(WIN_WIDTH, WIN_HEIGHT);
     glutInitWindowPosition(200, 200);
     glutCreateWindow("");
     glutDisplayFunc(displayMe);
     glutIdleFunc(myIdleFunc);
-    glutTimerFunc(0, timerCallback60sec, 123);
-    glutTimerFunc(0, timerCallback30sec, 123);
+    // glutTimerFunc(0, timerCallback60sec, 123);
+    glutTimerFunc(1000 / 60, timerCallback30sec, 123);
     glutMouseFunc(mouseClick);
     glutMainLoop();
 

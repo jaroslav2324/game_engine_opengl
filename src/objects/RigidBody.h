@@ -25,6 +25,7 @@ class RigidBody: public Object{
     PhysicsParameters& getPhysicsParameters();
 
     RigidBodyType getRigBodyType();
+    Point2D getCenter();
 
     virtual void updateRenderedItemsPosition (float dx, float  dy) = 0;
     void applyPhysics(float dt);

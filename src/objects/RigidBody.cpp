@@ -81,6 +81,10 @@ RigidBodyType RigidBody::getRigBodyType(){
     return rigBodyType;
 }
 
+Point2D RigidBody::getCenter(){
+    return center;
+}
+
 void RigidBody::applyPhysics(float dt){
     applyVelocity(dt);
     applyForces(dt);
