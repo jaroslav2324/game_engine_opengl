@@ -11,6 +11,8 @@ void RigidBody::applyVelocity(float dt){
     center.x += physicsParameters.velocityVector.x * dt;
     center.y += physicsParameters.velocityVector.y * dt;
 
+    // std::cout << "center: " << center.x << " " << center.y << std::endl;
+
     auto collisionCenter = collisionShape->getPosition();
     collisionCenter.x += physicsParameters.velocityVector.x * dt;
     collisionCenter.y += physicsParameters.velocityVector.y * dt;
@@ -19,7 +21,6 @@ void RigidBody::applyVelocity(float dt){
     // Update the rendered triangles
     updateRenderedItemsPosition(physicsParameters.velocityVector.x * dt, 
     physicsParameters.velocityVector.y * dt);
-
 }
 
 void RigidBody::applyGravity(float dt){

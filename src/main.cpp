@@ -28,8 +28,10 @@ void displayMe(void) {
     // auto points = generateRandomPoints(100, Point2D(500, 400), -450, 450, -350, 350);
     // auto triangles = triangulateBowyerWatson(points);
     // renderer.renderTriangles(triangles);
+    glClear(GL_COLOR_BUFFER_BIT);
     renderer.render();
-    //glutSwapBuffers();
+    glFinish();
+    glutSwapBuffers();
 }
 
 void myIdleFunc(){
@@ -59,12 +61,10 @@ void timerCallback30sec(int value){
 
     cir1.applyPhysics(1.0f/30) ;
     cir2.applyPhysics(1.0f/30) ;
-    // auto c = cir1.getCenter();
-    // std::cout << "cir1 center: " << c.x << " " << c.y << std::endl;
     rect1.applyPhysics(1.0f/30) ;
 
     glutPostRedisplay();
-    glutTimerFunc(16, timerCallback30sec, 123);
+    glutTimerFunc(1000 / 60, timerCallback30sec, 123);
 }
 
 
@@ -76,6 +76,7 @@ int main(int argc, char** argv) {
 
     ColorRGB color;
     cir1.setCircleColor(color(1.0f, 0.0f, 0.0f));
+    cir2.setGravityScale(2);
     cir2.setCircleColor(color(0.0f, 1.0f, 0.0f));
 
     cir2.setGravityScale(-0.01);
@@ -86,8 +87,7 @@ int main(int argc, char** argv) {
 
     // Пример использования
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE);
-    //glutInitDisplayMode(GLUT_DOUBLE);
+    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
     glutInitWindowSize(WIN_WIDTH, WIN_HEIGHT);
     glutInitWindowPosition(200, 200);
     glutCreateWindow("");

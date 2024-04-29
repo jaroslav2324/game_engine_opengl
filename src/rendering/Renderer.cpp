@@ -1,9 +1,7 @@
 #include "Renderer.h"
 
 void Renderer::render(){
-    glClear(GL_COLOR_BUFFER_BIT);
     drawRigidBodies();
-    glFlush();
 }
 
 void Renderer::renderTriangles(std::vector<NodesEdgesTriangles>& triangles){
@@ -12,7 +10,8 @@ void Renderer::renderTriangles(std::vector<NodesEdgesTriangles>& triangles){
     drawTriangs(triangles);
     glColor3f(0.0f, 0.7f, 0.7f);
     drawEdges(triangles);
-    glFlush();
+    //glFlush();
+    glFinish();
 }
 
 void Renderer::addRigBodyToPtrs(RigidBody *body){
@@ -98,7 +97,7 @@ Node Renderer::coordsToNormed(Node& node){
 
     Node normedNode;
     // 0 - min value
-    normedNode.x = -1.0 + 2.0 * (node.x - 0) / (winWidth - 0);
-    normedNode.y =  2 * (1 - ((node.y - 0) / (winHeight - 0))) - 1;
+    normedNode.x = -1.0 + 2.0 * (node.x - 0) / (float)(winWidth - 0);
+    normedNode.y =  2 * (1 - ((node.y - 0) / (float)(winHeight - 0))) - 1;
     return normedNode;
 }
