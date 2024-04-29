@@ -20,6 +20,8 @@ Renderer renderer(WIN_WIDTH, WIN_HEIGHT);
 Circle cir1(Point2D(200, 200), 100);
 Circle cir2(Point2D(600, 600), 200);
 
+Rect rect1(Point2D(400, 200), 200, 100);
+
 
 void displayMe(void) {
     // std::cout << "display" << std::endl;
@@ -47,6 +49,7 @@ void timerCallback60sec(int value){
 
     cir1.applyPhysics(1.0f/60) ;
     cir2.applyPhysics(1.0f/60) ;
+    rect1.applyPhysics(1.0f/60) ;
 
 
     glutTimerFunc(1.0f/60, timerCallback60sec, 123);
@@ -69,8 +72,11 @@ int main(int argc, char** argv) {
     cir1.setCircleColor(color(1.0f, 0.0f, 0.0f));
     cir2.setCircleColor(color(0.0f, 1.0f, 0.0f));
 
-    renderer.addCircleToPtrs(&cir1);
-    renderer.addCircleToPtrs(&cir2);
+    cir2.setGravityScale(-0.01);
+
+    renderer.addRigBodyToPtrs(&cir1);
+    renderer.addRigBodyToPtrs(&cir2);
+    renderer.addRigBodyToPtrs(&rect1);
 
     // Пример использования
     glutInit(&argc, argv);

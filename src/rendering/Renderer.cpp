@@ -2,7 +2,7 @@
 
 void Renderer::render(){
     glClear(GL_COLOR_BUFFER_BIT);
-    drawCircles();
+    drawRigidBodies();
     glFlush();
 }
 
@@ -15,30 +15,35 @@ void Renderer::renderTriangles(std::vector<NodesEdgesTriangles>& triangles){
     glFlush();
 }
 
-void Renderer::addCircleToPtrs(Circle *circle)
-{
-    circlePtrs.push_back(circle);
+void Renderer::addRigBodyToPtrs(RigidBody *body){
+    rigidBodies.push_back(body);
 }
 
-void Renderer::removeCircleFromPtrs(Circle *circle){
-    circlePtrs.erase(std::remove(circlePtrs.begin(), circlePtrs.end(), circle), circlePtrs.end());
+void Renderer::removeRigBodyFromPtrs(RigidBody *body){
+    rigidBodies.erase(std::remove(rigidBodies.begin(), rigidBodies.end(), body), rigidBodies.end());
 }
 
 void Renderer::setOpenGLColor(ColorRGB &color){
     glColor3f(color.r, color.g, color.b);
 }
 
-void Renderer::drawCircles()
-{
-    // TODO remove
-    srand(time(0));
-    for (auto cirPtr: circlePtrs){
-        drawCircle(cirPtr);
+void Renderer::drawRigidBodies(){
+
+    for (auto bodyPtr: rigidBodies){
+        RigidBodyType type = bodyPtr->getRigBodyType();
+        if (type == RigidBodyType::CIRCLE){
+            drawCircle((Circle*)bodyPtr);
+        }
+        else if (type == RigidBodyType::RECT){
+            drawRect((Rect*)bodyPtr);
+        }
+        else{
+            // TODO add error handling
+        }
     }
 }
 
-void Renderer::drawCircle(Circle *circle)
-{
+void Renderer::drawCircle(Circle *circle){
     ColorRGB color = circle->getCircleColor();
     setOpenGLColor(color);
     drawTriangs(circle->getRenderedTriangles());
@@ -48,8 +53,17 @@ void Renderer::drawCircle(Circle *circle)
     drawEdges(circle->getRenderedTriangles());
 }
 
-void Renderer::drawTriangs(std::vector<NodesEdgesTriangles> &trianglesVec)
-{
+void Renderer::drawRect(Rect *rect){
+    ColorRGB color = rect->getRectColor();
+    setOpenGLColor(color);
+    drawTriangs(rect->getRenderedTriangles());
+    ColorRGB edgeColor = rect->getEdgesColor();
+    setOpenGLColor(edgeColor);
+    // TODO add flag if edge drawing is needed
+    drawEdges(rect->getRenderedTriangles());
+}
+
+void Renderer::drawTriangs(std::vector<NodesEdgesTriangles> &trianglesVec){
 
     glBegin(GL_TRIANGLES);
     for (auto & tr: trianglesVec){

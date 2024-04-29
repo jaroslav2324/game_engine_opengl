@@ -5,11 +5,18 @@
 #include "../physics/CollisionShape.h"
 
 
+enum class RigidBodyType {
+    CIRCLE,
+    RECT,
+    UNDEFINED
+};
+
+
 // RigidBody is a class that represents a rigid body in the physics engine.
 
-class RigidBody{
+class RigidBody: public Object{
     public:
-    RigidBody(Point2D center) : center(center) {};
+    RigidBody(Point2D center, RigidBodyType rigBodyType) : center(center), rigBodyType(rigBodyType), Object(ObjectType::RIGIDBODY) {};
     ~RigidBody();
     void setCollisionShape (CollisionShape* collisionShape);
     CollisionShape* getCollisionShape();
@@ -17,8 +24,11 @@ class RigidBody{
     void setPhysicsParameters (PhysicsParameters& physicsParameters);
     PhysicsParameters& getPhysicsParameters();
 
+    RigidBodyType getRigBodyType();
+
     virtual void updateRenderedItemsPosition (float dx, float  dy) = 0;
     void applyPhysics(float dt);
+    void setGravityScale(float gs);
 
     protected:
 
@@ -30,5 +40,7 @@ class RigidBody{
 
     PhysicsParameters physicsParameters;
     CollisionShape* collisionShape = nullptr;
+
+    RigidBodyType rigBodyType = RigidBodyType::UNDEFINED;
 
 };

@@ -23,6 +23,7 @@ void RigidBody::applyVelocity(float dt){
 }
 
 void RigidBody::applyGravity(float dt){
+    if (physicsParameters.gravityScale == 0) return;
     physicsParameters.forceVector.y += G * physicsParameters.mass * physicsParameters.gravityScale * dt;
 }
 
@@ -76,8 +77,16 @@ PhysicsParameters &RigidBody::getPhysicsParameters(){
     return physicsParameters;
 }
 
-void RigidBody::applyPhysics(float dt)
-{
+RigidBodyType RigidBody::getRigBodyType(){
+    return rigBodyType;
+}
+
+void RigidBody::applyPhysics(float dt){
     applyVelocity(dt);
     applyForces(dt);
 }
+
+void RigidBody::setGravityScale(float gs){
+    this->physicsParameters.gravityScale = gs;
+}
+

@@ -1,10 +1,19 @@
 #include "Rect.h"
 
-Rect::Rect(Point2D &center, float width, float height)
-:  RigidBody(center)
+Rect::Rect(Point2D center, float width, float height)
+:  RigidBody(center, RigidBodyType::RECT)
 {
+    setCollisionShape(new RectCollisionShape(center, width, height));
+
     this->width = width;
     this->height = height;
+
+    color.r = 0.7f;
+    color.g = 0.7f;
+    color.b = 0.7f;
+    edgesColor.r = 1.0f;
+    edgesColor.g = 1.0f;
+    edgesColor.b = 1.0f;
 
     std::vector<Point2D> points;
     points.push_back(Point2D(center.x - width/2, center.y - height/2));
@@ -30,10 +39,18 @@ std::vector<NodesEdgesTriangles> &Rect::getRenderedTriangles(){
     return renderedTriangles;
 }
 
-void Rect::setColor(ColorRGB color){
+void Rect::setRectColor(ColorRGB color){
     this->color = color;
 }
 
 void Rect::setEdgesColor(ColorRGB color){
     this->edgesColor = color;
+}
+
+ColorRGB Rect::getRectColor(){
+    return color;
+}
+
+ColorRGB Rect::getEdgesColor(){
+    return edgesColor;
 }

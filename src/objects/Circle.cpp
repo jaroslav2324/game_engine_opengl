@@ -15,7 +15,7 @@ std::vector<Point2D> Circle::generatePointsOnCircle(int num_points)
     return points;
 }
 
-Circle::Circle(Point2D center, float radius): RigidBody(center) {
+Circle::Circle(Point2D center, float radius): RigidBody(center, RigidBodyType::CIRCLE) {
 
     setCollisionShape(new CircleCollisionShape(center, radius));
     this->radius = radius;
