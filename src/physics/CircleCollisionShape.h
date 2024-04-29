@@ -4,9 +4,7 @@
 
 class CircleCollisionShape: public CollisionShape{
 public:
-    CircleCollisionShape(Point2D& center, float radius): radius(radius), CollisionShape(center){
-        shapeType = CollisionShapeTypes::CIRCLE;
-    };
+    CircleCollisionShape(Point2D& center, float radius): radius(radius), CollisionShape(center, CollisionShapeTypes::CIRCLE){};
     float getRadius();
     void setRadius(float radius);
     virtual AABB getAABB();

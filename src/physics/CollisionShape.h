@@ -5,6 +5,7 @@
 
 enum class CollisionShapeTypes{
     CIRCLE,
+    RECT,
     UNDEFINED
 };
 
@@ -12,7 +13,7 @@ class CollisionShape
 {
 
 public:
-    CollisionShape(Point2D& positionRef): position(positionRef){};
+    CollisionShape(Point2D& positionRef, CollisionShapeTypes shapeType): position(positionRef), shapeType(shapeType){};
     virtual AABB getAABB() = 0;
     CollisionShapeTypes getShapeType();
     Point2D getPosition();

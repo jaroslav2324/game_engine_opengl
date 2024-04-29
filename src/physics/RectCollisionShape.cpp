@@ -2,7 +2,7 @@
 
 
 RectCollisionShape::RectCollisionShape(Point2D &center, float width, float height)
-: CollisionShape(position)
+: CollisionShape(position, CollisionShapeTypes::RECT)
 {
     this->width = width;
     this->height = height;
