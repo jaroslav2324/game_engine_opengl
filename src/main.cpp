@@ -7,32 +7,18 @@
 #include <ctime>
 
 #include "rendering/Renderer.h"
-#include "utils/randomGeneration.h"
 #include "physics/CollisionManager.h"
+#include "physics/PhysicsManager.h"
+#include "objects/ObjectManager.h"
 
 #define WIN_WIDTH 1000
 #define WIN_HEIGHT 800
 
-#define RANDOM_TRIANG_POINTS_TEST true
-
 Renderer renderer(WIN_WIDTH, WIN_HEIGHT);
-
-Circle cir1(Point2D(200, 200), 100);
-Circle cir2(Point2D(600, 600), 200);
-
-Rect rect1(Point2D(400, 200), 200, 100);
-
-Rect borderRect1(Point2D(0, 400), 50, 900);
-Rect borderRect2(Point2D(500, 0), 1100, 50);
-Rect borderRect3(Point2D(1000, 400), 50, 900);
-Rect borderRect4(Point2D(500, 800), 1100, 50);
-
+PhysicsManager physicsManager;
+CollisionManager collisionManager;
 
 void displayMe(void) {
-    // std::cout << "display" << std::endl;
-    // auto points = generateRandomPoints(100, Point2D(500, 400), -450, 450, -350, 350);
-    // auto triangles = triangulateBowyerWatson(points);
-    // renderer.renderTriangles(triangles);
     glClear(GL_COLOR_BUFFER_BIT);
     renderer.render();
     glFinish();
@@ -62,42 +48,40 @@ void mouseClick(int button, int state, int x, int y) {
 //     glutTimerFunc(1.0f/60, timerCallback60sec, 123);
 // }
 
-void timerCallback30sec(int value){
+void timerCallback60sec(int value){
 
-    cir1.applyPhysics(1.0f/30) ;
-    cir2.applyPhysics(1.0f/30) ;
-    rect1.applyPhysics(1.0f/30) ;
-
+    physicsManager.updatePhysics(1.0f / 60);
     glutPostRedisplay();
-    glutTimerFunc(1000 / 60, timerCallback30sec, 123);
+    glutTimerFunc(1000 / 60, timerCallback60sec, 123);
 }
+
 
 
 int main(int argc, char** argv) {
 
-    borderRect1.setStatic(true);
-    borderRect2.setStatic(true);
-    // borderRect3.setStatic(true);
-    borderRect4.setStatic(true);
-
-    CollisionManager collisionManager;
-
-    // std::cout << collisionManager.checkCircleCircleIntersection(cir1, cir2) << std::endl;
-
     ColorRGB color;
-    cir1.setCircleColor(color(1.0f, 0.0f, 0.0f));
-    cir2.setGravityScale(2);
-    cir2.setCircleColor(color(0.0f, 1.0f, 0.0f));
 
-    cir2.setGravityScale(-0.01);
+    ObjectManager objManager(&renderer, &collisionManager, &physicsManager);
 
-    renderer.addRigBodyToPtrs(&cir1);
-    renderer.addRigBodyToPtrs(&cir2);
-    renderer.addRigBodyToPtrs(&rect1);
-    renderer.addRigBodyToPtrs(&borderRect1);
-    renderer.addRigBodyToPtrs(&borderRect2);
-    renderer.addRigBodyToPtrs(&borderRect3);
-    renderer.addRigBodyToPtrs(&borderRect4);
+    Rect* borderRect1 = objManager.createRect(Point2D(0, 400), 50, 900);
+    borderRect1->setStatic(true);
+    Rect* borderRect2 = objManager.createRect(Point2D(500, 0), 1100, 50);
+    borderRect2->setStatic(true);
+    Rect* borderRect3 = objManager.createRect(Point2D(1000, 400), 50, 900);
+    borderRect3->setStatic(true);
+    Rect* borderRect4 = objManager.createRect(Point2D(500, 800), 1100, 50);
+    borderRect4->setStatic(true);
+
+    Circle* cir1 = objManager.createCircle(Point2D(200, 200), 100);
+    cir1->setCircleColor(color(1.0f, 0.0f, 0.0f));
+    cir1->setRenderEdges(true);
+
+    Circle* cir2 = objManager.createCircle(Point2D(600, 600), 200);
+    cir2->setCircleColor(color(0.0f, 1.0f, 0.0f));
+    cir2->setGravityScale(-0.01);
+
+    Rect* rect1 = objManager.createRect(Point2D(400, 200), 200, 100);
+    rect1->setRectColor(color(0.0f, 0.0f, 1.0f));
 
     // Пример использования
     glutInit(&argc, argv);
@@ -107,10 +91,14 @@ int main(int argc, char** argv) {
     glutCreateWindow("");
     glutDisplayFunc(displayMe);
     glutIdleFunc(myIdleFunc);
+    
     // glutTimerFunc(0, timerCallback60sec, 123);
-    glutTimerFunc(1000 / 60, timerCallback30sec, 123);
+    glutTimerFunc(1000 / 60, timerCallback60sec, 123);
     glutMouseFunc(mouseClick);
     glutMainLoop();
+
+    std::cout << "Exiting..." << std::endl;
+    objManager.~ObjectManager();
 
     return 0;
 }

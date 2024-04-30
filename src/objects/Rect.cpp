@@ -33,7 +33,6 @@ Rect::Rect(Point2D center, float width, float height)
     // points.push_back(Point2D(center.x + width/2, center.y - height/2));
     // points.push_back(Point2D(center.x + width/2, center.y + height/2)); 
     // points.push_back(Point2D(center.x - width/2, center.y + height/2));
-    // points.push_back(center);
 
     // renderedTriangles = triangulateBowyerWatson(points);
 }

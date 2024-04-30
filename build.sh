@@ -7,10 +7,12 @@ g++ -g src/main.cpp \
  src/objects/Rect.cpp \
   src/objects/Object.cpp \
   src/objects/RigidBody.cpp \
- src/utils/randomGeneration.cpp \
+  src/objects/ObjectManager.cpp \
+  src/utils/randomGeneration.cpp \
   src/utils/Color.cpp \
   src/physics/CollisionShape.cpp \
   src/physics/CircleCollisionShape.cpp \
-    src/physics/RectCollisionShape.cpp \
+  src/physics/PhysicsManager.cpp \
+  src/physics/RectCollisionShape.cpp \
   src/physics/ColisionManager.cpp \
  -o collisionEngine -lglut -lGLU -lGL

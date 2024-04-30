@@ -7,7 +7,9 @@ bool CollisionManager::checkAABBintersection(const AABB &a, const AABB &b){
     return true;
 }
 
-bool CollisionManager::checkCircleCircleIntersection(Circle &obj1, Circle &obj2){
+
+bool CollisionManager::checkCircleCircleIntersection(Circle &obj1, Circle &obj2)
+{
     CircleCollisionShape* shape1 = dynamic_cast<CircleCollisionShape*>(obj1.getCollisionShape());
     CircleCollisionShape* shape2 = dynamic_cast<CircleCollisionShape*>(obj2.getCollisionShape());
     float distance = sqrt(pow(shape1->getPosition().x - shape2->getPosition().x , 2) 
@@ -16,4 +18,17 @@ bool CollisionManager::checkCircleCircleIntersection(Circle &obj1, Circle &obj2)
     if (distance < shape1->getRadius() + shape2->getRadius())
         return true;
     return false;
+}
+
+void CollisionManager::addObject(Object *obj){
+    collidableObjects.push_back(obj);
+}
+
+void CollisionManager::removeObject(Object *obj){
+    collidableObjects.erase(std::remove(collidableObjects.begin(), collidableObjects.end(), obj), collidableObjects.end());
+}
+
+// TODO implement
+void CollisionManager::resolveCollisions(){
+
 }
