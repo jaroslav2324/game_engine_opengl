@@ -22,10 +22,10 @@ Circle cir2(Point2D(600, 600), 200);
 
 Rect rect1(Point2D(400, 200), 200, 100);
 
-Rect borderRect1(Point2D(700, 400), 200, 700);
-Rect borderRect2(Point2D(500, 0), 1100, 100);
-Rect borderRect3(Point2D(1000, 400), 100, 900);
-Rect borderRect4(Point2D(500, 800), 1100, 100);
+Rect borderRect1(Point2D(0, 400), 50, 900);
+Rect borderRect2(Point2D(500, 0), 1100, 50);
+Rect borderRect3(Point2D(1000, 400), 50, 900);
+Rect borderRect4(Point2D(500, 800), 1100, 50);
 
 
 void displayMe(void) {

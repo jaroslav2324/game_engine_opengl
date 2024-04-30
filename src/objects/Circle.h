@@ -25,7 +25,12 @@ class Circle: public RigidBody{
     ColorRGB getCircleColor();
     ColorRGB getEdgesColor();
 
+    void setRenderEdges(bool renderEdges);
+    bool isSetEdgesRendered();
+
     private:
+
+    bool renderEdges = false;
 
     std::vector<Point2D> generatePointsOnCircle(int num_points);
 

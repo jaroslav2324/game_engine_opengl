@@ -68,3 +68,11 @@ ColorRGB Rect::getRectColor(){
 ColorRGB Rect::getEdgesColor(){
     return edgesColor;
 }
+
+void Rect::setRenderEdges(bool renderEdges){
+    this->renderEdges = renderEdges;
+}
+
+bool Rect::isSetEdgesRendered(){
+    return this->renderEdges;
+}

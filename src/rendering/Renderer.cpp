@@ -46,20 +46,24 @@ void Renderer::drawCircle(Circle *circle){
     ColorRGB color = circle->getCircleColor();
     setOpenGLColor(color);
     drawTriangs(circle->getRenderedTriangles());
-    ColorRGB edgeColor = circle->getEdgesColor();
-    setOpenGLColor(edgeColor);
-    // TODO add flag if edge drawing is needed
-    drawEdges(circle->getRenderedTriangles());
+
+    if (circle->isSetEdgesRendered()){
+        ColorRGB edgeColor = circle->getEdgesColor();
+        setOpenGLColor(edgeColor);
+        drawEdges(circle->getRenderedTriangles());
+    }
 }
 
 void Renderer::drawRect(Rect *rect){
     ColorRGB color = rect->getRectColor();
     setOpenGLColor(color);
     drawTriangs(rect->getRenderedTriangles());
-    ColorRGB edgeColor = rect->getEdgesColor();
-    setOpenGLColor(edgeColor);
-    // TODO add flag if edge drawing is needed
-    drawEdges(rect->getRenderedTriangles());
+    
+    if (rect->isSetEdgesRendered()){
+        ColorRGB edgeColor = rect->getEdgesColor();
+        setOpenGLColor(edgeColor);
+        drawEdges(rect->getRenderedTriangles());
+    }
 }
 
 void Renderer::drawTriangs(std::vector<NodesEdgesTriangles> &trianglesVec){
