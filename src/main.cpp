@@ -22,6 +22,11 @@ Circle cir2(Point2D(600, 600), 200);
 
 Rect rect1(Point2D(400, 200), 200, 100);
 
+Rect borderRect1(Point2D(700, 400), 200, 700);
+Rect borderRect2(Point2D(500, 0), 1100, 100);
+Rect borderRect3(Point2D(1000, 400), 100, 900);
+Rect borderRect4(Point2D(500, 800), 1100, 100);
+
 
 void displayMe(void) {
     // std::cout << "display" << std::endl;
@@ -70,6 +75,11 @@ void timerCallback30sec(int value){
 
 int main(int argc, char** argv) {
 
+    borderRect1.setStatic(true);
+    borderRect2.setStatic(true);
+    // borderRect3.setStatic(true);
+    borderRect4.setStatic(true);
+
     CollisionManager collisionManager;
 
     // std::cout << collisionManager.checkCircleCircleIntersection(cir1, cir2) << std::endl;
@@ -84,6 +94,10 @@ int main(int argc, char** argv) {
     renderer.addRigBodyToPtrs(&cir1);
     renderer.addRigBodyToPtrs(&cir2);
     renderer.addRigBodyToPtrs(&rect1);
+    renderer.addRigBodyToPtrs(&borderRect1);
+    renderer.addRigBodyToPtrs(&borderRect2);
+    renderer.addRigBodyToPtrs(&borderRect3);
+    renderer.addRigBodyToPtrs(&borderRect4);
 
     // Пример использования
     glutInit(&argc, argv);

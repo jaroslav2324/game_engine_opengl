@@ -95,3 +95,6 @@ void RigidBody::setGravityScale(float gs){
     this->physicsParameters.gravityScale = gs;
 }
 
+void RigidBody::setStatic(bool val){
+    this->physicsParameters.staticBody = val;
+}

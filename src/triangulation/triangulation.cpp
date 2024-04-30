@@ -57,11 +57,13 @@ std::vector<NodesEdgesTriangles> triangulateBowyerWatson(std::vector<Point2D> in
     std::vector<int> triangleIndexes;
     int counter = 0;
     for (auto& triangle: triangulation){
+        // std::cout << triangle.node1.x << " " << triangle.node1.y << " " << triangle.node2.x << " " << triangle.node2.y << " " << triangle.node3.x << " " << triangle.node3.y << std::endl;
         if (triangle.hasNode(superTriangle.node1) || triangle.hasNode(superTriangle.node2) || triangle.hasNode(superTriangle.node3)){
             triangleIndexes.push_back(counter);
         }
         counter++;
     }
+    // std::cout << std::endl;
     std::reverse(triangleIndexes.begin(), triangleIndexes.end());
     for (auto idx: triangleIndexes){
             triangulation.erase(triangulation.begin() + idx);
@@ -78,7 +80,7 @@ void insertPointInTriangulation(Node point, std::vector<NodesEdgesTriangles> &tr
     std::vector<EdgeWithNodes> polygon;
 
     for (auto& triang: triangulation){
-
+        // std::cout << triang.node1.x << " " << triang.node1.y << " " << triang.node2.x << " " << triang.node2.y << " " << triang.node3.x << " " << triang.node3.y << std::endl;
         if (!triang.delaunayCriteriaSatisfied(point)){
             triang.isBad = true;
             polygon.push_back(triang.edge1);

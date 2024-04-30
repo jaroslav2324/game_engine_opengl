@@ -15,13 +15,27 @@ Rect::Rect(Point2D center, float width, float height)
     edgesColor.g = 1.0f;
     edgesColor.b = 1.0f;
 
-    std::vector<Point2D> points;
-    points.push_back(Point2D(center.x - width/2, center.y - height/2));
-    points.push_back(Point2D(center.x + width/2, center.y - height/2));
-    points.push_back(Point2D(center.x + width/2, center.y + height/2)); 
-    points.push_back(Point2D(center.x - width/2, center.y + height/2));
+    Node n1, n2, n3;
+    n1.x = center.x - width / 2;
+    n1.y = center.y - height / 2;
+    n2.x = center.x + width / 2;
+    n2.y = center.y - height / 2;
+    n3.x = center.x + width / 2;
+    n3.y = center.y + height / 2;
+    renderedTriangles.push_back(NodesEdgesTriangles(n1, n2, n3));
+    n2.x = center.x - width / 2;
+    n2.y = center.y + height / 2;
+    renderedTriangles.push_back(NodesEdgesTriangles(n1, n2, n3));
 
-    renderedTriangles = triangulateBowyerWatson(points);
+    //! Triangulation for rects sometimes not works correctly
+    // std::vector<Point2D> points;
+    // points.push_back(Point2D(center.x - width/2, center.y - height/2));
+    // points.push_back(Point2D(center.x + width/2, center.y - height/2));
+    // points.push_back(Point2D(center.x + width/2, center.y + height/2)); 
+    // points.push_back(Point2D(center.x - width/2, center.y + height/2));
+    // points.push_back(center);
+
+    // renderedTriangles = triangulateBowyerWatson(points);
 }
 
 void Rect::updateRenderedItemsPosition(float dx, float dy){

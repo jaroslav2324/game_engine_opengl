@@ -30,6 +30,7 @@ class RigidBody: public Object{
     virtual void updateRenderedItemsPosition (float dx, float  dy) = 0;
     void applyPhysics(float dt);
     void setGravityScale(float gs);
+    void setStatic(bool val);
 
     protected:
 
