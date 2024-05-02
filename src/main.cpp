@@ -51,6 +51,7 @@ void mouseClick(int button, int state, int x, int y) {
 void timerCallback60sec(int value){
 
     physicsManager.updatePhysics(1.0f / 60);
+    collisionManager.resolveCollisions();
     glutPostRedisplay();
     glutTimerFunc(1000 / 60, timerCallback60sec, 123);
 }
@@ -74,11 +75,13 @@ int main(int argc, char** argv) {
 
     Circle* cir1 = objManager.createCircle(Point2D(200, 200), 100);
     cir1->setCircleColor(color(1.0f, 0.0f, 0.0f));
+    cir1->setGravityScale(5);
     cir1->setRenderEdges(true);
 
-    Circle* cir2 = objManager.createCircle(Point2D(600, 600), 200);
+    Circle* cir2 = objManager.createCircle(Point2D(600, 600), 150);
     cir2->setCircleColor(color(0.0f, 1.0f, 0.0f));
-    cir2->setGravityScale(-0.01);
+    cir2->setGravityScale(-2);
+    cir2->setMass(0.1);
 
     Rect* rect1 = objManager.createRect(Point2D(400, 200), 200, 100);
     rect1->setRectColor(color(0.0f, 0.0f, 1.0f));

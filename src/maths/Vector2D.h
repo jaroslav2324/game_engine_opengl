@@ -10,14 +10,19 @@ struct Vector2D
     float x;
     float y;
 
-    void normalize();
+    Vector2D& normalize();
     float length();
     float dot(const Vector2D& vector);
+    bool isZeroVector();
 
     Vector2D operator+(const Vector2D& vector);
     Vector2D operator-(const Vector2D& vector);
     Vector2D operator*(float scalar);
     Vector2D operator/(float scalar);
+    Vector2D& operator+=(const Vector2D& vector);
+    Vector2D& operator-=(const Vector2D& vector);
+    Vector2D& operator*=(float scalar);
+    Vector2D& operator/=(float scalar);
 
     Vector2D& operator=(const Point2D& point);
 };

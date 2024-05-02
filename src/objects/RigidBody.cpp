@@ -78,7 +78,10 @@ float RigidBody::getMass(){
 }
 
 void RigidBody::setCenter(Point2D center){
+    Vector2D shiftVec = center - this->center;
     this->center = center;
+    this->collisionShape->setPosition(center);
+    updateRenderedItemsPosition(shiftVec.x, shiftVec.y);
 }
 
 void RigidBody::setVelocity(Vector2D velocity){
@@ -92,6 +95,8 @@ void RigidBody::setMass(float mass){
 void RigidBody::shift(Vector2D shiftVec){
     center.x += shiftVec.x;
     center.y += shiftVec.y;
+    collisionShape->setPosition(center);
+    updateRenderedItemsPosition(shiftVec.x, shiftVec.y);
 }
 
 void RigidBody::applyPhysics(float dt)
@@ -106,4 +111,8 @@ void RigidBody::setGravityScale(float gs){
 
 void RigidBody::setStatic(bool val){
     this->physicsParameters.staticBody = val;
+}
+
+bool RigidBody::isStatic(){
+    return physicsParameters.staticBody;
 }

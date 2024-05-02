@@ -5,13 +5,14 @@ Vector2D::Vector2D(const Point2D &point){
     y = point.y;
 }
 
-void Vector2D::normalize(){
+Vector2D& Vector2D::normalize(){
     float len = length();
 
     if(len != 0){
         x /= len;
         y /= len;
     }
+    return *this;
 }
 
 float Vector2D::length(){
@@ -20,6 +21,14 @@ float Vector2D::length(){
 
 float Vector2D::dot(const Vector2D &vector){
     return x * vector.x + y * vector.y;
+}
+
+bool Vector2D::isZeroVector(){
+    float epsilon = 1e-3;
+    if(std::abs(x) < epsilon && std::abs(y) < epsilon){
+        return true;
+    }
+    return false;
 }
 
 Vector2D Vector2D::operator+(const Vector2D &vector){
@@ -37,6 +46,30 @@ Vector2D Vector2D::operator*(float scalar){
 Vector2D Vector2D::operator/(float scalar)
 {
     return Vector2D(x / scalar, y / scalar);
+}
+
+Vector2D &Vector2D::operator+=(const Vector2D &vector){
+    x += vector.x;
+    y += vector.y;
+    return *this;
+}
+
+Vector2D &Vector2D::operator-=(const Vector2D &vector){
+    x -= vector.x;
+    y -= vector.y;
+    return *this;
+}
+
+Vector2D &Vector2D::operator*=(float scalar){
+    x *= scalar;
+    y *= scalar;
+    return *this;
+}
+
+Vector2D &Vector2D::operator/=(float scalar){
+    x /= scalar;
+    y /= scalar;
+    return *this;
 }
 
 Vector2D &Vector2D::operator=(const Point2D &point)

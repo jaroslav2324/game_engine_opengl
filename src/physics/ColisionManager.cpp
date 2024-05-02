@@ -35,6 +35,8 @@ void CollisionManager::resolveRigidRigidCollision(RigidBody &obj1, RigidBody &ob
 
 void CollisionManager::resolveCircleCircleCollision(Circle &cir1, Circle &cir2){
 
+    std::cout << "Circle Circle Collision" << std::endl;
+
     Vector2D vel1 = cir1.getVelocity();
     Vector2D vel2 = cir2.getVelocity();
     float mass1 = cir1.getMass();
@@ -75,10 +77,80 @@ void CollisionManager::resolveCircleCircleCollision(Circle &cir1, Circle &cir2){
 
 void CollisionManager::resolveCircleRectCollision(Circle &obj1, Rect &obj2){
 
+    std::cout << "CircleRectCollision" << std::endl;
+
+    Vector2D vel1 = obj1.getVelocity();
+    Vector2D vel2 = obj2.getVelocity();
+    float mass1 = obj1.getMass();
+    float mass2 = obj2.getMass();
+
+    // momentum conservation
+    Vector2D newVel1, newVel2;
+
+    calcVelocitiesMomentumConservation(mass1, mass2, vel1.x, vel2.x, newVel1.x, newVel2.x);
+    calcVelocitiesMomentumConservation(mass1, mass2, vel1.y, vel2.y, newVel1.y, newVel2.y);
+
+    Point2D center1 = obj1.getCenter();
+    Point2D center2 = obj2.getCenter();
+
+    Vector2D normalizedNewVel1 = Vector2D(newVel1).normalize();
+    Vector2D normalizedNewVel2 = Vector2D(newVel2).normalize();
+
+    if (normalizedNewVel1.isZeroVector() && normalizedNewVel2.isZeroVector()){
+        normalizedNewVel1 = Vector2D(1, 0);
+        normalizedNewVel2 = Vector2D(-1, 0);
+    }
+
+    //TODO change algorithm
+    // iteratively shift
+    while (checkAABBintersection(obj1.getCollisionShape()->getAABB(), obj2.getCollisionShape()->getAABB())){
+        obj1.shift(normalizedNewVel1);
+        obj2.shift(normalizedNewVel2);
+        normalizedNewVel1 *= 2;
+        normalizedNewVel2 *= 2;
+    }
+    
+    obj1.setVelocity(newVel1);
+    obj2.setVelocity(newVel2);
 }
 
 void CollisionManager::resolveRectRectCollision(Rect &obj1, Rect &obj2){
 
+    std::cout << "RectRectCollision" << std::endl;
+
+    Vector2D vel1 = obj1.getVelocity();
+    Vector2D vel2 = obj2.getVelocity();
+    float mass1 = obj1.getMass();
+    float mass2 = obj2.getMass();
+
+    // momentum conservation
+    Vector2D newVel1, newVel2;
+
+    calcVelocitiesMomentumConservation(mass1, mass2, vel1.x, vel2.x, newVel1.x, newVel2.x);
+    calcVelocitiesMomentumConservation(mass1, mass2, vel1.y, vel2.y, newVel1.y, newVel2.y);
+
+    Point2D center1 = obj1.getCenter();
+    Point2D center2 = obj2.getCenter();
+
+    Vector2D normalizedNewVel1 = Vector2D(newVel1).normalize();
+    Vector2D normalizedNewVel2 = Vector2D(newVel2).normalize();
+
+    if (normalizedNewVel1.isZeroVector() && normalizedNewVel2.isZeroVector()){
+        normalizedNewVel1 = Vector2D(1, 0);
+        normalizedNewVel2 = Vector2D(-1, 0);
+    }
+
+    //TODO change algorithm
+    // iteratively shift
+    while (checkAABBintersection(obj1.getCollisionShape()->getAABB(), obj2.getCollisionShape()->getAABB())){
+        obj1.shift(normalizedNewVel1);
+        obj2.shift(normalizedNewVel2);
+        normalizedNewVel1 *= 2;
+        normalizedNewVel2 *= 2;
+    }
+    
+    obj1.setVelocity(newVel1);
+    obj2.setVelocity(newVel2);
 }
 
 bool CollisionManager::checkCircleCircleIntersection(Circle &obj1, Circle &obj2)
@@ -142,6 +214,11 @@ void CollisionManager::resolveCollisions(){
             if (obj1->getObjectType() == ObjectType::RIGIDBODY && obj2->getObjectType() == ObjectType::RIGIDBODY){
                 RigidBody* rig1 = (RigidBody*)obj1;
                 RigidBody* rig2 = (RigidBody*)obj2;
+
+                if (rig1->isStatic() && rig2->isStatic()){
+                    continue;
+                }
+
                 RigidBodyType rigType1 = rig1->getRigBodyType();
                 RigidBodyType rigType2 = rig2->getRigBodyType();
 
