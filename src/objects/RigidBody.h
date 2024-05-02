@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Object.h"
+#include "CollidableObject.h"
 #include "../physics/PhysicsParameters.h"
 #include "../physics/CollisionShape.h"
 
@@ -14,9 +14,9 @@ enum class RigidBodyType {
 
 // RigidBody is a class that represents a rigid body in the physics engine.
 
-class RigidBody: public Object{
+class RigidBody: public CollidableObject{
     public:
-    RigidBody(Point2D center, RigidBodyType rigBodyType) : center(center), rigBodyType(rigBodyType), Object(ObjectType::RIGIDBODY) {};
+    RigidBody(Point2D center, RigidBodyType rigBodyType) : center(center), rigBodyType(rigBodyType), CollidableObject(ObjectType::RIGIDBODY) {};
     ~RigidBody();
     void setCollisionShape (CollisionShape* collisionShape);
     CollisionShape* getCollisionShape();

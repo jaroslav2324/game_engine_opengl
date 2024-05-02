@@ -6,9 +6,10 @@ enum class ObjectType {
     UNDEFINED
 };
 
-class Object {
+// Collidable object
+class CollidableObject {
     public:
-        Object(ObjectType type): objType(type){};
+        CollidableObject(ObjectType type): objType(type){};
 
         ObjectType getObjectType();
 

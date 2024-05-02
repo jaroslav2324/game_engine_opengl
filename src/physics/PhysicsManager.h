@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../objects/Object.h"
+#include "../objects/CollidableObject.h"
 #include "../objects/RigidBody.h"
 #include <algorithm>
 #include <vector>
@@ -10,12 +10,12 @@ class PhysicsManager{
 
 public:
 
-    void addObject(Object* object);
-    void removeObject(Object* object);
+    void addObject(CollidableObject* object);
+    void removeObject(CollidableObject* object);
 
     void updatePhysics(float dt);
 
 private:
 
-    std::vector<Object*> objects;
+    std::vector<CollidableObject*> objects;
 };

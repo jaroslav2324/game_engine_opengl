@@ -29,7 +29,7 @@ Circle *ObjectManager::createCircle(Point2D center, float radius){
     return circle;
 }
 
-void ObjectManager::addPtrToManagers(Object *ptr){
+void ObjectManager::addPtrToManagers(CollidableObject *ptr){
     collisionManager->addObject(ptr);
     physicsManager->addObject(ptr);
 }

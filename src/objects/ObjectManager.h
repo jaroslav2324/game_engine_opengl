@@ -16,9 +16,9 @@ public:
 
 
 private:
-    void addPtrToManagers(Object* ptr);
+    void addPtrToManagers(CollidableObject* ptr);
 
-    std::vector<Object*> objects;
+    std::vector<CollidableObject*> objects;
     Renderer* renderer;
     CollisionManager* collisionManager;
     PhysicsManager* physicsManager;

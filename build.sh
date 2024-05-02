@@ -5,7 +5,7 @@ g++ -g src/main.cpp \
   src/rendering/Renderer.cpp \
  src/objects/Circle.cpp \
  src/objects/Rect.cpp \
-  src/objects/Object.cpp \
+  src/objects/CollidableObject.cpp \
   src/objects/RigidBody.cpp \
   src/objects/ObjectManager.cpp \
   src/utils/randomGeneration.cpp \

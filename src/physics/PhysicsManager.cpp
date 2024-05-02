@@ -1,10 +1,10 @@
 #include "PhysicsManager.h"
 
-void PhysicsManager::addObject(Object *object){
+void PhysicsManager::addObject(CollidableObject *object){
     objects.push_back(object);
 }
 
-void PhysicsManager::removeObject(Object *object){
+void PhysicsManager::removeObject(CollidableObject *object){
     objects.erase(std::remove(objects.begin(), objects.end(), object), objects.end());
 }
 
