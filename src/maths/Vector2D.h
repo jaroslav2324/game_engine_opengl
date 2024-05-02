@@ -10,6 +10,10 @@ struct Vector2D
     float x;
     float y;
 
+    void normalize();
+    float length();
+    float dot(const Vector2D& vector);
+
     Vector2D operator+(const Vector2D& vector);
     Vector2D operator-(const Vector2D& vector);
     Vector2D operator*(float scalar);
