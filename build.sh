@@ -10,6 +10,7 @@ g++ -g src/main.cpp \
   src/objects/ObjectManager.cpp \
   src/utils/randomGeneration.cpp \
   src/utils/Color.cpp \
+  src/physics/PhysicsParameters.cpp \
   src/physics/CollisionShape.cpp \
   src/physics/CircleCollisionShape.cpp \
   src/physics/PhysicsManager.cpp \
