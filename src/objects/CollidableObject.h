@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../physics/CollisionShape.h"
+
 enum class ObjectType {
     RIGIDBODY,
     SOFTBODY,
@@ -8,11 +10,17 @@ enum class ObjectType {
 
 // Collidable object
 class CollidableObject {
-    public:
-        CollidableObject(ObjectType type): objType(type){};
+public:
+    CollidableObject(ObjectType type): objType(type){};
+    ~CollidableObject();
 
-        ObjectType getObjectType();
+    ObjectType getObjectType();
 
-    protected:
-        ObjectType objType;
+    void setCollisionShape (CollisionShape* collisionShape);
+    CollisionShape* getCollisionShape();
+    void destroyCollisionShape ();
+
+protected:
+    ObjectType objType;
+    CollisionShape* collisionShape = nullptr;
 };

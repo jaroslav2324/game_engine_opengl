@@ -49,26 +49,9 @@ void RigidBody::applyForces(float dt)
 }
 
 RigidBody::~RigidBody(){
-    destroyCollisionShape();
+    
 }
 
-void RigidBody::setCollisionShape(CollisionShape *collisionShape){
-    if ( this->collisionShape != nullptr ) {
-        delete this->collisionShape;
-    }
-    this->collisionShape = collisionShape;
-}
-
-CollisionShape *RigidBody::getCollisionShape(){
-    return collisionShape;
-}
-
-void RigidBody::destroyCollisionShape(){
-    if (collisionShape != nullptr) {
-        delete collisionShape;
-        collisionShape = nullptr;
-    }
-}
 
 void RigidBody::setPhysicsParameters(PhysicsParameters &physicsParameters){
     this->physicsParameters = physicsParameters;

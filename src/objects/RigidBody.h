@@ -2,7 +2,6 @@
 
 #include "CollidableObject.h"
 #include "../physics/PhysicsParameters.h"
-#include "../physics/CollisionShape.h"
 
 
 enum class RigidBodyType {
@@ -18,9 +17,7 @@ class RigidBody: public CollidableObject{
     public:
     RigidBody(Point2D center, RigidBodyType rigBodyType) : center(center), rigBodyType(rigBodyType), CollidableObject(ObjectType::RIGIDBODY) {};
     ~RigidBody();
-    void setCollisionShape (CollisionShape* collisionShape);
-    CollisionShape* getCollisionShape();
-    void destroyCollisionShape ();
+
     void setPhysicsParameters (PhysicsParameters& physicsParameters);
     PhysicsParameters& getPhysicsParameters();
 
@@ -39,9 +36,7 @@ class RigidBody: public CollidableObject{
     void applyGravity (float dt);
 
     Point2D center;
-
     PhysicsParameters physicsParameters;
-    CollisionShape* collisionShape = nullptr;
 
     RigidBodyType rigBodyType = RigidBodyType::UNDEFINED;
 
