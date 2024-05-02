@@ -45,3 +45,7 @@ Vector2D &Vector2D::operator=(const Point2D &point)
     y = point.y;
     return *this;
 }
+
+Vector2D operator*(float scalar, Vector2D &vector){
+    return vector.operator*(scalar);
+}

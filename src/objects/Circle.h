@@ -24,6 +24,8 @@ class Circle: public RigidBody{
     void setEdgesColor(ColorRGB& color);
     ColorRGB getCircleColor();
     ColorRGB getEdgesColor();
+    void setRadius(float radius);
+    float getRadius();
 
     void setRenderEdges(bool renderEdges);
     bool isSetEdgesRendered();

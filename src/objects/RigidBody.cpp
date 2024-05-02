@@ -69,7 +69,33 @@ Point2D RigidBody::getCenter(){
     return center;
 }
 
-void RigidBody::applyPhysics(float dt){
+Vector2D RigidBody::getVelocity(){
+    return physicsParameters.velocityVector;
+}
+
+float RigidBody::getMass(){
+    return physicsParameters.mass; 
+}
+
+void RigidBody::setCenter(Point2D center){
+    this->center = center;
+}
+
+void RigidBody::setVelocity(Vector2D velocity){
+    physicsParameters.velocityVector = velocity;
+}
+
+void RigidBody::setMass(float mass){
+    physicsParameters.mass = mass;
+}
+
+void RigidBody::shift(Vector2D shiftVec){
+    center.x += shiftVec.x;
+    center.y += shiftVec.y;
+}
+
+void RigidBody::applyPhysics(float dt)
+{
     applyVelocity(dt);
     applyForces(dt);
 }

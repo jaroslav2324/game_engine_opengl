@@ -27,6 +27,9 @@ public:
     bool checkCircleRectIntersection (Circle& obj1, Rect& obj2);
     bool checkAABBintersection(const AABB& a, const AABB& b);
 
+    // returns scalar velocities
+    void calcVelocitiesMomentumConservation(float mass1, float mass2, float vel1, float vel2, float& retVel1, float& retVel2);
+
     std::vector<CollidableObject*> collidableObjects;
 
 };

@@ -8,6 +8,7 @@ typedef struct Point2D{
     float x;
     float y;
 
+    Point2D& operator=(const Point2D& second);
     Point2D operator-(const Point2D& second);
     Point2D operator+(const Point2D& second);
     Point2D operator*(float scalar);

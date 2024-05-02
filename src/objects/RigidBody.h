@@ -23,8 +23,14 @@ class RigidBody: public CollidableObject{
 
     RigidBodyType getRigBodyType();
     Point2D getCenter();
+    Vector2D getVelocity();
+    float getMass();
+    void setCenter(Point2D center);
+    void setVelocity(Vector2D velocity);
+    void setMass(float mass);
 
     virtual void updateRenderedItemsPosition (float dx, float  dy) = 0;
+    void shift(Vector2D shiftVec);
     void applyPhysics(float dt);
     void setGravityScale(float gs);
     void setStatic(bool val);

@@ -21,3 +21,5 @@ struct Vector2D
 
     Vector2D& operator=(const Point2D& point);
 };
+
+Vector2D operator*(float scalar, Vector2D& vector);

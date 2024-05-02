@@ -65,6 +65,14 @@ ColorRGB Circle::getEdgesColor(){
     return edgesColor;
 }
 
+void Circle::setRadius(float radius){
+    this->radius = radius;
+}
+
+float Circle::getRadius(){
+    return radius;
+}
+
 void Circle::setRenderEdges(bool renderEdges){
     this->renderEdges = renderEdges;
 }
