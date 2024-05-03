@@ -21,6 +21,9 @@ class Rect: public RigidBody {
     ColorRGB getRectColor();
     ColorRGB getEdgesColor();
 
+    float getWidth();
+    float getHeight();
+
     void setRenderEdges(bool renderEdges);
     bool isSetEdgesRendered();
 

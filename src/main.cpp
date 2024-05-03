@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
     Rect* borderRect4 = objManager.createRect(Point2D(500, 800), 1100, 50);
     borderRect4->setStatic(true);
 
-    Circle* cir1 = objManager.createCircle(Point2D(200, 200), 100);
+    Circle* cir1 = objManager.createCircle(Point2D(450, 200), 100);
     cir1->setCircleColor(color(1.0f, 0.0f, 0.0f));
     cir1->setGravityScale(5);
     cir1->setRenderEdges(true);
@@ -81,10 +81,12 @@ int main(int argc, char** argv) {
     Circle* cir2 = objManager.createCircle(Point2D(600, 600), 150);
     cir2->setCircleColor(color(0.0f, 1.0f, 0.0f));
     cir2->setGravityScale(-2);
-    cir2->setMass(0.1);
+    cir2->setMass(100);
+    cir2->setStatic(true);
 
-    Rect* rect1 = objManager.createRect(Point2D(400, 200), 200, 100);
-    rect1->setRectColor(color(0.0f, 0.0f, 1.0f));
+    // Rect* rect1 = objManager.createRect(Point2D(400, 200), 200, 100);
+    // rect1->setRectColor(color(0.0f, 0.0f, 1.0f));
+
 
     // Пример использования
     glutInit(&argc, argv);

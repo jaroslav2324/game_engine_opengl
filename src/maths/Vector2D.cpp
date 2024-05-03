@@ -31,6 +31,12 @@ bool Vector2D::isZeroVector(){
     return false;
 }
 
+Vector2D &Vector2D::operator-(){
+    x = -x;
+    y = -y;
+    return *this;
+}
+
 Vector2D Vector2D::operator+(const Vector2D &vector){
     return Vector2D(x + vector.x, y + vector.y);
 }
@@ -43,8 +49,7 @@ Vector2D Vector2D::operator*(float scalar){
     return Vector2D(x * scalar, y * scalar);
 }
 
-Vector2D Vector2D::operator/(float scalar)
-{
+Vector2D Vector2D::operator/(float scalar){
     return Vector2D(x / scalar, y / scalar);
 }
 
@@ -72,8 +77,7 @@ Vector2D &Vector2D::operator/=(float scalar){
     return *this;
 }
 
-Vector2D &Vector2D::operator=(const Point2D &point)
-{
+Vector2D &Vector2D::operator=(const Point2D &point){
     x = point.x;
     y = point.y;
     return *this;

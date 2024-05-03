@@ -68,6 +68,14 @@ ColorRGB Rect::getEdgesColor(){
     return edgesColor;
 }
 
+float Rect::getWidth(){
+    return this->width;
+}
+
+float Rect::getHeight(){
+    return this->height;
+}
+
 void Rect::setRenderEdges(bool renderEdges){
     this->renderEdges = renderEdges;
 }

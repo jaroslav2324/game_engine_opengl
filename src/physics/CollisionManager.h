@@ -27,6 +27,12 @@ public:
     bool checkCircleRectIntersection (Circle& obj1, Rect& obj2);
     bool checkAABBintersection(const AABB& a, const AABB& b);
 
+    bool pointOnSegment(Point2D point, Point2D segP1, Point2D segP2);
+    int FindSegmentCircleIntersections(float cx, float cy, float radius,
+                                        Point2D segP1, Point2D segP2,                
+                                        Point2D& intersectionP1,  Point2D& intersectionP2);
+    Vector2D gecCircleRectIntersectionLineVec(Circle& cir, Rect& rect);
+
     // returns scalar velocities
     void calcVelocitiesMomentumConservation(float mass1, float mass2, float vel1, float vel2, float& retVel1, float& retVel2);
 

@@ -15,6 +15,7 @@ struct Vector2D
     float dot(const Vector2D& vector);
     bool isZeroVector();
 
+    Vector2D& operator-();
     Vector2D operator+(const Vector2D& vector);
     Vector2D operator-(const Vector2D& vector);
     Vector2D operator*(float scalar);
