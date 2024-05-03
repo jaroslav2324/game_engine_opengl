@@ -13,6 +13,7 @@ struct Vector2D
     Vector2D& normalize();
     float length();
     float dot(const Vector2D& vector);
+    
     bool isZeroVector();
 
     Vector2D& operator-();

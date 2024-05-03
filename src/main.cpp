@@ -25,10 +25,6 @@ void displayMe(void) {
     glutSwapBuffers();
 }
 
-void myIdleFunc(){
-
-}
-
 void mouseClick(int button, int state, int x, int y) {
 
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
@@ -37,16 +33,6 @@ void mouseClick(int button, int state, int x, int y) {
         //glutPostRedisplay();
     }
 }
-
-// void timerCallback60sec(int value){
-
-//     cir1.applyPhysics(1.0f/60) ;
-//     cir2.applyPhysics(1.0f/60) ;
-//     rect1.applyPhysics(1.0f/60) ;
-
-
-//     glutTimerFunc(1.0f/60, timerCallback60sec, 123);
-// }
 
 void timerCallback60sec(int value){
 
@@ -84,7 +70,7 @@ int main(int argc, char** argv) {
     cir2->setMass(100);
     cir2->setStatic(true);
 
-    // Rect* rect1 = objManager.createRect(Point2D(400, 200), 200, 100);
+    // Rect* rect1 = objManager.createRect(Point2D(200, 200), 200, 100);
     // rect1->setRectColor(color(0.0f, 0.0f, 1.0f));
 
 
@@ -93,9 +79,8 @@ int main(int argc, char** argv) {
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
     glutInitWindowSize(WIN_WIDTH, WIN_HEIGHT);
     glutInitWindowPosition(200, 200);
-    glutCreateWindow("");
+    glutCreateWindow("Collision engine");
     glutDisplayFunc(displayMe);
-    glutIdleFunc(myIdleFunc);
     
     // glutTimerFunc(0, timerCallback60sec, 123);
     glutTimerFunc(1000 / 60, timerCallback60sec, 123);

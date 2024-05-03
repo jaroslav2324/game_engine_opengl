@@ -15,6 +15,8 @@ float &retVel1, float &retVel2){
     retVel2 = ((mass2 - mass1) * vel2  + 2 * mass1 * vel1) / totalMass;
 }
 
+
+
 //TODO implement
 void CollisionManager::resolveRigidRigidCollision(RigidBody &obj1, RigidBody &obj2){
 
@@ -116,7 +118,7 @@ void CollisionManager::resolveCircleRectCollision(Circle &obj1, Rect &obj2){
     if (obj1.isStatic()){
         // reflect velocity of rect
         // get intersection line vector
-        Vector2D lineVec = gecCircleRectIntersectionLineVec(obj1, obj2);
+        Vector2D lineVec = getCircleRectIntersectionLineVec(obj1, obj2);
         Vector2D normal(-lineVec.y, lineVec.x);
         // normal must direct from circle
         if (vel2.dot(normal) > 0){
@@ -139,7 +141,7 @@ void CollisionManager::resolveCircleRectCollision(Circle &obj1, Rect &obj2){
     if (obj2.isStatic()){
         // reflect velocity of circle
         // get intersection line vector
-        Vector2D lineVec = gecCircleRectIntersectionLineVec(obj1, obj2);
+        Vector2D lineVec = getCircleRectIntersectionLineVec(obj1, obj2);
         Vector2D normal(-lineVec.y, lineVec.x);
         // normal must direct from rect
         if (vel1.dot(normal) > 0){
@@ -198,6 +200,53 @@ void CollisionManager::resolveRectRectCollision(Rect &obj1, Rect &obj2){
 
     Vector2D vel1 = obj1.getVelocity();
     Vector2D vel2 = obj2.getVelocity();
+
+    if (obj1.isStatic()){
+        // reflect velocity of rect2
+        // get intersection line vector
+        Vector2D lineVec = getRectRectIntersectionLineVec(obj1, obj2);
+        Vector2D normal(-lineVec.y, lineVec.x);
+        // normal must direct from rect1
+        if (vel2.dot(normal) > 0){
+            normal = -normal;
+        }
+        normal.normalize();
+        Vector2D reflectedVel = vel2 - 2 * vel2.dot(normal) * normal;
+        obj2.setVelocity(reflectedVel);
+        // move rect2 out of rect1
+        // TODO change
+        int shiftVal = 1;
+        Vector2D normedVel = reflectedVel;
+        normedVel.normalize();
+        while(checkAABBintersection(obj1.getCollisionShape()->getAABB(), obj2.getCollisionShape()->getAABB())){
+            obj2.shift(shiftVal * normedVel);
+        }
+        return;
+    }
+
+    if (obj2.isStatic()){
+        // reflect velocity of rect1
+        // get intersection line vector
+        Vector2D lineVec = getRectRectIntersectionLineVec(obj1, obj2);
+        Vector2D normal(-lineVec.y, lineVec.x);
+        // normal must direct from rect1
+        if (vel1.dot(normal) > 0){
+            normal = -normal;
+        }
+        normal.normalize();
+        Vector2D reflectedVel = vel1 - 2 * vel1.dot(normal) * normal;
+        obj1.setVelocity(reflectedVel);
+        // move rect2 out of rect1
+        // TODO change
+        int shiftVal = 1;
+        Vector2D normedVel = reflectedVel;
+        normedVel.normalize();
+        while(checkAABBintersection(obj1.getCollisionShape()->getAABB(), obj2.getCollisionShape()->getAABB())){
+            obj1.shift(shiftVal * normedVel);
+        }
+        return;  
+    }
+
     float mass1 = obj1.getMass();
     float mass2 = obj2.getMass();
 
@@ -400,26 +449,15 @@ int CollisionManager::FindSegmentCircleIntersections(float cx, float cy, float r
 }
 
 // TODO REFACTOR
-Vector2D CollisionManager::gecCircleRectIntersectionLineVec(Circle &cir, Rect &rect){
+Vector2D CollisionManager::getCircleRectIntersectionLineVec(Circle &cir, Rect &rect){
     float radius = cir.getRadius();
     float cx = cir.getCenter().x;
     float cy = cir.getCenter().y;
-    float rx = rect.getCenter().x;
-    float ry = rect.getCenter().y;
-    float rw = rect.getWidth();
-    float rh = rect.getHeight();
 
     // create segments
     Point2D segsP1[4];
     Point2D segsP2[4];
-    segsP1[0] = Point2D(rx - rw/2, ry - rh/2);
-    segsP2[0] = Point2D(rx + rw/2, ry - rh/2);
-    segsP1[1] = Point2D(rx + rw/2, ry - rh/2);
-    segsP2[1] = Point2D(rx + rw/2, ry + rh/2);
-    segsP1[2] = Point2D(rx + rw/2, ry + rh/2);
-    segsP2[2] = Point2D(rx - rw/2, ry + rh/2);
-    segsP1[3] = Point2D(rx - rw/2, ry + rh/2);
-    segsP2[3] = Point2D(rx - rw/2, ry - rh/2);
+    fillRectSegments(rect.getCenter(), rect.getWidth(), rect.getHeight(), segsP1, segsP2);
 
     int countInters = 0;
     Point2D inters[8];
@@ -445,4 +483,93 @@ Vector2D CollisionManager::gecCircleRectIntersectionLineVec(Circle &cir, Rect &r
     }
 
     return Vector2D(inter1.x - inter2.x, inter1.y - inter2.y);
+}
+
+void CollisionManager::fillRectSegments(Point2D center, float width, float height, Point2D *segsX, Point2D* segsY){
+    segsX[0] = Point2D(center.x - width/2, center.y - height/2);
+    segsY[1] = Point2D(center.x + width/2, center.y + height/2);
+    segsX[2] = Point2D(center.x + width/2, center.y + height/2);
+    segsY[0] = Point2D(center.x + width/2, center.y - height/2);
+    segsY[2] = Point2D(center.x - width/2, center.y + height/2);
+    segsX[3] = Point2D(center.x - width/2, center.y + height/2);
+    segsX[1] = Point2D(center.x + width/2, center.y - height/2);
+    segsY[3] = Point2D(center.x - width/2, center.y - height/2);
+}
+
+//TODO refactor
+int CollisionManager::findSegmentSegmentIntersection(Point2D seg1P1, Point2D seg1P2,   
+                                    Point2D seg2P1, Point2D seg2P2,   
+                                    Point2D& intersectionP1){
+    Point2D intP;
+    Vector2D vecDirection1(seg1P1.x - seg1P2.x, seg1P1.y - seg1P2.y);
+    Vector2D vecDirection2(seg2P1.x - seg2P2.x, seg2P1.y - seg2P2.y);
+
+    // lines are parallel
+    if (std::abs(vecDirection1.dot(vecDirection2) - vecDirection1.length() * vecDirection2.length()) < 1e-6){
+        // TODO check collinear vectors
+        return 0;
+    }            
+
+    //TODO refactor this
+    float n;
+    if (seg1P2.y - seg1P1.y != 0) {  
+        float q = (seg1P2.x - seg1P1.x) / (seg1P1.y - seg1P2.y);   
+        float sn = (seg2P1.x - seg2P2.x) + (seg2P1.y - seg2P2.y) * q; 
+        if (!sn) { 
+            // lines do not intersect
+            return 0;
+        } 
+        else{
+            float fn = (seg2P1.x - seg1P1.x) + (seg2P1.y - seg1P1.y) * q;   
+            n = fn / sn;
+        }
+    }
+    else {
+        if (!(seg2P1.x - seg2P2.x)) { 
+            // lines do not intersect
+            return 0;
+        }  
+        else{
+            n = (seg2P1.y - seg1P1.y) / (seg2P1.y - seg2P2.y);
+        }  
+    }
+    intP.x = seg2P1.x + (seg2P2.x - seg2P1.x) * n;  
+    intP.y = seg2P1.y + (seg2P2.y - seg2P1.y) * n;  
+
+    if ( pointOnSegment(intP, seg1P1, seg1P2) && pointOnSegment(intP, seg2P1, seg2P2)){
+        intersectionP1 = intP;
+        return 1;
+    }
+    return 0;
+}
+
+Vector2D CollisionManager::getRectRectIntersectionLineVec(Rect& rect1, Rect& rect2){
+
+    // create segments
+    Point2D segs1P1[4];
+    Point2D segs1P2[4];
+    fillRectSegments(rect1.getCenter(), rect1.getWidth(), rect1.getHeight(), segs1P1, segs1P2);
+    Point2D segs2P1[4];
+    Point2D segs2P2[4];
+    fillRectSegments(rect2.getCenter(), rect2.getWidth(), rect2.getHeight(), segs2P1, segs2P2);
+
+    int countInterPoints = 0;
+    Point2D interPoints[16];
+    int currInterPidx = 0;
+    Point2D interP;
+    for (int idx1 = 0; idx1 < 4; idx1++){
+        for (int idx2 = idx1 + 1; idx2 < 4; idx2++){
+            int count = findSegmentSegmentIntersection(segs1P1[idx1], segs1P2[idx1], segs2P1[idx2], segs2P2[idx2], interP);
+            if (count == 1){
+                interPoints[currInterPidx] = interP;
+                currInterPidx++;
+                countInterPoints += count;
+            }
+        }
+    }
+    if (countInterPoints < 1 || countInterPoints > 2){
+        std::cout << "ERROR: Rect Rect intersection points wrong count: " << countInterPoints << "\n";
+    }
+
+    return Vector2D(interPoints[0].x - interPoints[1].x, interPoints[0].y - interPoints[1].y);
 }
