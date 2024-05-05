@@ -14,6 +14,8 @@ typedef struct Point2D{
     Point2D operator*(float scalar);
     Point2D operator/(float scalar);
 
+    float distanceTo(Point2D& second);
+
     operator Node() const{
         return Node(x, y);
     }

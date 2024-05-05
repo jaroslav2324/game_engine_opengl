@@ -116,3 +116,15 @@ void RigidBody::setStatic(bool val){
 bool RigidBody::isStatic(){
     return physicsParameters.staticBody;
 }
+
+bool RigidBody::isElastic(){
+    return physicsParameters.isElastic();
+}
+
+int RigidBody::setElastic(float coeffElasticity){
+    return physicsParameters.setElastic(coeffElasticity);
+}
+
+float RigidBody::getElasticityCoeff(){
+    return physicsParameters.getCoeffElasticity();
+}

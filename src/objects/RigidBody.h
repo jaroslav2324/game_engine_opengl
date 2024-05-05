@@ -35,6 +35,9 @@ class RigidBody: public CollidableObject{
     void setGravityScale(float gs);
     void setStatic(bool val);
     bool isStatic();
+    bool isElastic();
+    int setElastic(float coeffElasticity);
+    float getElasticityCoeff();
 
     protected:
 

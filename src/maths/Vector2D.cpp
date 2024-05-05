@@ -5,14 +5,15 @@ Vector2D::Vector2D(const Point2D &point){
     y = point.y;
 }
 
-Vector2D& Vector2D::normalize(){
+Vector2D Vector2D::normalize(){
+    Vector2D res(x, y);
     float len = length();
 
     if(len != 0){
-        x /= len;
-        y /= len;
+        res.x /= len;
+        res.y /= len;
     }
-    return *this;
+    return res;
 }
 
 float Vector2D::length(){

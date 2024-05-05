@@ -23,3 +23,9 @@ Point2D Point2D::operator*(float scalar){
 Point2D Point2D::operator/(float scalar){
     return Point2D(x / scalar, y / scalar);
 }
+
+float Point2D::distanceTo(Point2D &second){
+    float xDiff = x - second.x;
+    float yDiff = y - second.y;
+    return sqrt(xDiff * xDiff + yDiff * yDiff);
+}
