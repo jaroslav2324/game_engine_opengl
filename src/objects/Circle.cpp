@@ -53,7 +53,14 @@ void Circle::setCircleColor(ColorRGB &color){
     this->color = color;
 }
 
+void Circle::setCircleColor(ColorRGB &&color){
+    this->color = color;
+}
+
 void Circle::setEdgesColor(ColorRGB &color){
+    this->edgesColor = color;
+}
+void Circle::setEdgesColor(ColorRGB &&color){
     this->edgesColor = color;
 }
 

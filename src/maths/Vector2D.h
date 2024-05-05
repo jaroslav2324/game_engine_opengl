@@ -19,7 +19,7 @@ struct Vector2D
     
     bool isZeroVector();
 
-    Vector2D& operator-();
+    Vector2D operator-();
     Vector2D operator+(const Vector2D& vector);
     Vector2D operator-(const Vector2D& vector);
     Vector2D operator*(float scalar);

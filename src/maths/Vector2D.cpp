@@ -46,10 +46,9 @@ bool Vector2D::isZeroVector(){
     return false;
 }
 
-Vector2D &Vector2D::operator-(){
-    x = -x;
-    y = -y;
-    return *this;
+Vector2D Vector2D::operator-(){
+    Vector2D res(-x, -y);
+    return res;
 }
 
 Vector2D Vector2D::operator+(const Vector2D &vector){

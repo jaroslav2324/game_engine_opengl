@@ -54,8 +54,7 @@ void CollisionManager::resolveCircleCircleCollision(Circle &cir1, Circle &cir2){
         // move cir 2 out of cir 1
         float distance = center2.distanceTo(center1);
         float shift = cir1.getRadius() + cir2.getRadius() - distance;
-        Vector2D normReflVel2 = reflectedVel2.normalize();
-        Vector2D shiftVector = shift * normReflVel2;
+        Vector2D shiftVector = shift * normal;
         cir2.shift(shiftVector);
 
         if (cir2.isElastic()){
@@ -77,8 +76,7 @@ void CollisionManager::resolveCircleCircleCollision(Circle &cir1, Circle &cir2){
         // move cir 1 out of cir 2
         float distance = center1.distanceTo(center2);
         float shift = cir1.getRadius() + cir2.getRadius() - distance;
-        Vector2D normReflVrl1 = reflectedVel1.normalize();
-        Vector2D shiftVector = shift * normReflVrl1;
+        Vector2D shiftVector = shift * normal;
         cir1.shift(shiftVector);
 
         if (cir1.isElastic()){
@@ -101,25 +99,59 @@ void CollisionManager::resolveCircleCircleCollision(Circle &cir1, Circle &cir2){
     Vector2D normal2 = -normal1;
 
     // reflect vectors
-    Vector2D reflectedVel1 = vel1 - 2 * vel1.dot(normal1) * normal1;
-    Vector2D reflectedVel2 = vel2 - 2 * vel2.dot(normal2) * normal2;
+    Vector2D reflectedVel1, reflectedVel2;
+    float sumLength;
+    if (vel1.isZeroVector()){
+        reflectedVel1 = normal1;
+        sumLength -= 1; // length of normal
+    }
+    else{
+        if (vel1.dot(normal1) < 0){
+            reflectedVel1 = vel1 - 2 * vel1.dot(normal1) * normal1;
+        }
+        else{
+            reflectedVel1 = vel1;
+        }
+    }
+    if (vel2.isZeroVector()){
+        reflectedVel2 = normal2;
+        sumLength -= 1; // length of normal
+    }
+    else{
+        if (vel2.dot(normal2) < 0){
+            reflectedVel2 = vel2 - 2 * vel2.dot(normal2) * normal2;
+        }
+        else{
+            reflectedVel2 = vel2;
+        }
+    }
 
-    float sumLength = reflectedVel1.length() + reflectedVel2.length();
+    sumLength = reflectedVel1.length() + reflectedVel2.length();
     float sumMass = mass1 + mass2;
 
     float newLength1 = mass2 / sumMass * sumLength;
     float newLength2 = mass1 / sumMass * sumLength;
 
     if (!reflectedVel1.isZeroVector()){
-        float mulCoeff1 = newLength1 / reflectedVel1.length();
-        reflectedVel1 *= mulCoeff1;
+        if (vel1.dot(normal1) < 0){
+            float mulCoeff1 = newLength1 / reflectedVel1.length();
+            reflectedVel1 *= mulCoeff1;
+        }
+        else{
+            reflectedVel1 += normal1 * (reflectedVel1.length() - newLength1);
+        }
     }
     else{
         reflectedVel1 = normal1 * newLength1;
     }
     if (!reflectedVel2.isZeroVector()){
-        float mulCoeff2 = newLength2 / reflectedVel2.length();
-        reflectedVel2 *= mulCoeff2;
+        if (vel2.dot(normal2) < 0){
+            float mulCoeff2 = newLength2 / reflectedVel2.length();
+            reflectedVel2 *= mulCoeff2;
+        }
+        else{
+            reflectedVel2 += normal2 * (reflectedVel2.length() - newLength2);
+        }
     }
     else{
         reflectedVel2 = normal2 * newLength2;
@@ -129,13 +161,11 @@ void CollisionManager::resolveCircleCircleCollision(Circle &cir1, Circle &cir2){
     float distNeeded = cir1.getRadius() + cir2.getRadius();
     Vector2D distActual = center1 - center2;
     float shift = distNeeded - distActual.length();
-    shift += 1e-3;
+    shift += 1e-1;
 
-    // // find shift vectors
-    float coeffMultiplyVel1 = (shift / 2) / reflectedVel1.project(normal1).length();
-    Vector2D shiftVector1 = coeffMultiplyVel1 * reflectedVel1;
-    float coeffMultiplyVel2 = (shift / 2) / reflectedVel2.project(normal2).length();
-    Vector2D shiftVector2 = coeffMultiplyVel2 * reflectedVel2;
+    //  find shift vectors
+    Vector2D shiftVector1 = shift / 2 * normal1;
+    Vector2D shiftVector2 = shift / 2 * normal2;
 
     cir1.shift(shiftVector1);
     cir2.shift(shiftVector2);

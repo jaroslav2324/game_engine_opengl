@@ -21,7 +21,9 @@ class Circle: public RigidBody{
 
     std::vector<NodesEdgesTriangles>& getRenderedTriangles();
     void setCircleColor(ColorRGB& color);
+    void setCircleColor(ColorRGB&& color);
     void setEdgesColor(ColorRGB& color);
+    void setEdgesColor(ColorRGB&& color);
     ColorRGB getCircleColor();
     ColorRGB getEdgesColor();
     void setRadius(float radius);
