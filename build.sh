@@ -2,6 +2,7 @@
 g++ -g src/main.cpp \
  src/maths/Vector2D.cpp \
  src/maths/Point2D.cpp \
+ src/maths/Matrix2x2.cpp \
  src/triangulation/structures.cpp \
  src/triangulation/triangulation.cpp \
   src/rendering/Renderer.cpp \

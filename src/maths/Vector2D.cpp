@@ -23,6 +23,20 @@ float Vector2D::dot(const Vector2D &vector){
     return x * vector.x + y * vector.y;
 }
 
+float Vector2D::angle(Vector2D &second){
+    return acos(this->dot(second) / (this->length() * second.length()));
+}
+
+Vector2D Vector2D::project(Vector2D &onThis){
+    return this->dot(onThis) * onThis / (onThis.length() * onThis.length());
+}
+
+Vector2D Vector2D::rotate(float angle){
+    float s = sin(angle);
+    float c = cos(angle);
+    return Vector2D(x * c - y * s, x * s + y * c);
+}
+
 bool Vector2D::isZeroVector(){
     float epsilon = 1e-3;
     if(std::abs(x) < epsilon && std::abs(y) < epsilon){

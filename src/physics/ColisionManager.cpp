@@ -16,8 +16,6 @@ float &retVel1, float &retVel2){
 }
 
 
-
-//TODO implement
 void CollisionManager::resolveRigidRigidCollision(RigidBody &obj1, RigidBody &obj2){
 
     RigidBodyType rigType1 = obj1.getRigBodyType();
@@ -72,40 +70,51 @@ void CollisionManager::resolveCircleCircleCollision(Circle &cir1, Circle &cir2){
         return;
     }
 
-    float mass1 = cir1.getMass();
-    float mass2 = cir2.getMass();
-
-    // momentum conservation
-    Vector2D newVel1, newVel2;
-
-    calcVelocitiesMomentumConservation(mass1, mass2, vel1.x, vel2.x, newVel1.x, newVel2.x);
-    calcVelocitiesMomentumConservation(mass1, mass2, vel1.y, vel2.y, newVel1.y, newVel2.y);
-
     Point2D center1 = cir1.getCenter();
     Point2D center2 = cir2.getCenter();
 
-    // find how much to shift
+    float mass1 = cir1.getMass();
+    float mass2 = cir2.getMass();
+
+    // points in direction of cir1
+    Vector2D normal1 = center1 - center2;
+    normal1.normalize();
+    // opposite directon
+    Vector2D normal2 = -normal1;
+
+    // reflect vectors
+    Vector2D reflectedVel1 = vel1 - 2 * vel1.dot(normal1) * normal1;
+    Vector2D reflectedVel2 = vel2 - 2 * vel2.dot(normal2) * normal2;
+
+    float sumLength = reflectedVel1.length() + reflectedVel2.length();
+    float sumMass = mass1 + mass2;
+
+    float newLength1 = mass2 / sumMass * sumLength;
+    float newLength2 = mass1 / sumMass * sumLength;
+
+    float mulCoeff1 = newLength1 / reflectedVel1.length();
+    float mulCoeff2 = newLength2 / reflectedVel2.length();
+
+    reflectedVel1 *= mulCoeff1;
+    reflectedVel2 *= mulCoeff2;
+
+    // // find how much to shift
     float distNeeded = cir1.getRadius() + cir2.getRadius();
     Vector2D distActual = center1 - center2;
     float shift = distNeeded - distActual.length();
+    shift += 1e-3;
 
-    // find normals
-    Vector2D normal1 = center1 - center2;
-    Vector2D normal2 = center2 - center1;
-    normal1.normalize();
-    normal2.normalize();
-
-    // find shift vectors
-    float coeffMultiplyVel1 = (shift / 2) / (newVel1.dot(normal1) * normal1).length();
-    Vector2D shiftVector1 = coeffMultiplyVel1 * newVel1;
-    float coeffMultiplyVel2 = (shift / 2) / (newVel2.dot(normal2) * normal2).length();
-    Vector2D shiftVector2 = coeffMultiplyVel2 * newVel2;
+    // // find shift vectors
+    float coeffMultiplyVel1 = (shift / 2) / reflectedVel1.project(normal1).length();
+    Vector2D shiftVector1 = coeffMultiplyVel1 * reflectedVel1;
+    float coeffMultiplyVel2 = (shift / 2) / reflectedVel2.project(normal2).length();
+    Vector2D shiftVector2 = coeffMultiplyVel2 * reflectedVel2;
 
     cir1.shift(shiftVector1);
     cir2.shift(shiftVector2);
 
-    cir1.setVelocity(newVel1);
-    cir2.setVelocity(newVel2);
+    cir1.setVelocity(reflectedVel1);
+    cir2.setVelocity(reflectedVel2);
 }
 
 void CollisionManager::resolveCircleRectCollision(Circle &obj1, Rect &obj2){

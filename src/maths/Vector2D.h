@@ -13,6 +13,9 @@ struct Vector2D
     Vector2D& normalize();
     float length();
     float dot(const Vector2D& vector);
+    float angle(Vector2D& second);
+    Vector2D project(Vector2D& onThis);
+    Vector2D rotate(float angle);
     
     bool isZeroVector();
 

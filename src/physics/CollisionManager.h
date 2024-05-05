@@ -4,6 +4,7 @@
 
 #include "../objects/Circle.h"
 #include "../objects/Rect.h"
+#include "../maths/Matrix2x2.h"
 
 
 class CollisionManager{

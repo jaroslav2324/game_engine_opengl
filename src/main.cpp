@@ -64,11 +64,23 @@ int main(int argc, char** argv) {
     cir1->setGravityScale(5);
     cir1->setRenderEdges(true);
 
-    Circle* cir2 = objManager.createCircle(Point2D(600, 600), 150);
-    cir2->setCircleColor(color(0.0f, 1.0f, 0.0f));
-    cir2->setGravityScale(-2);
+    Circle* cir2 = objManager.createCircle(Point2D(600, 600), 100);
+    cir2->setCircleColor(color(0.0f, 0.7f, 0.0f));
+    // cir2->setGravityScale(-2);
+    cir2->setGravityScale(5);
     cir2->setMass(100);
-    cir2->setStatic(true);
+    cir2->setRenderEdges(true);
+    // cir2->setStatic(true);
+
+    Circle* cir3 = objManager.createCircle(Point2D(800, 200), 100);
+    cir3->setCircleColor(color(0.0f, 1.0f, 1.0f));
+    cir3->setGravityScale(5);
+    cir3->setRenderEdges(true);
+
+    Circle* cir4 = objManager.createCircle(Point2D(300, 400), 100);
+    cir4->setCircleColor(color(0.0f, 0.0f, 0.7f));
+    cir4->setGravityScale(5);
+    cir4->setRenderEdges(true);
 
     // Rect* rect1 = objManager.createRect(Point2D(200, 200), 200, 100);
     // rect1->setRectColor(color(0.0f, 0.0f, 1.0f));
