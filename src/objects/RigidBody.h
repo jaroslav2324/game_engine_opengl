@@ -1,4 +1,5 @@
 #pragma once
+#include <functional>
 
 #include "CollidableObject.h"
 #include "../physics/PhysicsParameters.h"
@@ -39,11 +40,16 @@ class RigidBody: public CollidableObject{
     int setElastic(float coeffElasticity);
     float getElasticityCoeff();
 
+    void setOnCollisionCallback(std::function<void ()> callback);
+    void callOnCollisionCallback();
+
     protected:
 
     void applyVelocity (float dt);
     void applyForces (float dt);
     void applyGravity (float dt);
+
+    std::function<void ()> onCollisionCallback;
 
     Point2D center;
     PhysicsParameters physicsParameters;

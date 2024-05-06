@@ -128,3 +128,13 @@ int RigidBody::setElastic(float coeffElasticity){
 float RigidBody::getElasticityCoeff(){
     return physicsParameters.getCoeffElasticity();
 }
+
+void RigidBody::setOnCollisionCallback(std::function<void()> callback){
+    this->onCollisionCallback = callback;
+}
+
+void RigidBody::callOnCollisionCallback(){
+    if(onCollisionCallback != nullptr){
+        onCollisionCallback();
+    }
+}

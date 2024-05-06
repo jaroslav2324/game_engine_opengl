@@ -393,6 +393,8 @@ void CollisionManager::resolveCollisions(){
 
                 if (collided){
                     resolveRigidRigidCollision(*rig1, *rig2);
+                    rig1->callOnCollisionCallback();
+                    rig2->callOnCollisionCallback();
                 }
                 continue;
             }
