@@ -63,7 +63,8 @@ int main(int argc, char** argv) {
 
     ObjectManager objManager(&renderer, &collisionManager, &physicsManager);
     // loadBasicScene(objManager);
-    loadPingPong(objManager);
+    // loadPingPong(objManager);
+    loadTestRectsScene(objManager);
 
     // Пример использования
     

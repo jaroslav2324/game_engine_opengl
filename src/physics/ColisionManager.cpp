@@ -535,47 +535,30 @@ void CollisionManager::fillRectSegments(Point2D center, float width, float heigh
 int CollisionManager::findSegmentSegmentIntersection(Point2D seg1P1, Point2D seg1P2,   
                                     Point2D seg2P1, Point2D seg2P2,   
                                     Point2D& intersectionP1){
-    Point2D intP;
-    Vector2D vecDirection1(seg1P1.x - seg1P2.x, seg1P1.y - seg1P2.y);
-    Vector2D vecDirection2(seg2P1.x - seg2P2.x, seg2P1.y - seg2P2.y);
-
-    // lines are parallel
-    if (std::abs(vecDirection1.dot(vecDirection2) - vecDirection1.length() * vecDirection2.length()) < 1e-6){
-        // TODO check collinear vectors
+    // check segments` lengths are not 0
+    Vector2D vec1(seg1P1.x - seg1P2.x, seg1P1.y - seg1P2.y);
+    Vector2D vec2(seg2P1.x - seg2P2.x, seg2P1.y - seg2P2.y);
+    if (vec1.isZeroVector() || vec2.isZeroVector()){
         return 0;
-    }            
+    }
 
-    //TODO refactor this
-    float n;
-    if (seg1P2.y - seg1P1.y != 0) {  
-        float q = (seg1P2.x - seg1P1.x) / (seg1P1.y - seg1P2.y);   
-        float sn = (seg2P1.x - seg2P2.x) + (seg2P1.y - seg2P2.y) * q; 
-        if (!sn) { 
-            // lines do not intersect
-            return 0;
-        } 
-        else{
-            float fn = (seg2P1.x - seg1P1.x) + (seg2P1.y - seg1P1.y) * q;   
-            n = fn / sn;
-        }
+    float denominator = ((seg2P2.y - seg2P1.y) * (seg1P2.x - seg1P1.x) - (seg2P2.x - seg2P1.x) * (seg1P2.y - seg1P1.y));
+    
+    // segments are parallel
+    if (std::abs(denominator) < 1e-6){
+        return false;
     }
-    else {
-        if (!(seg2P1.x - seg2P2.x)) { 
-            // lines do not intersect
-            return 0;
-        }  
-        else{
-            n = (seg2P1.y - seg1P1.y) / (seg2P1.y - seg2P2.y);
-        }  
-    }
-    intP.x = seg2P1.x + (seg2P2.x - seg2P1.x) * n;  
-    intP.y = seg2P1.y + (seg2P2.y - seg2P1.y) * n;  
 
-    if ( pointOnSegment(intP, seg1P1, seg1P2) && pointOnSegment(intP, seg2P1, seg2P2)){
-        intersectionP1 = intP;
-        return 1;
+    float ua = ((seg2P2.x - seg2P1.x) * (seg1P1.y - seg2P1.y) - (seg2P2.y - seg2P1.y) * (seg1P1.x - seg2P1.x)) / denominator;
+    float ub = ((seg1P2.x - seg1P1.x) * (seg1P1.y - seg2P1.y) - (seg1P2.y - seg1P1.y) * (seg1P1.x - seg2P1.x)) / denominator;
+
+    if (ua < 0 || ua > 1 || ub < 0 || ub > 1){
+        return 0;
     }
-    return 0;
+
+    intersectionP1.x = seg1P1.x + ua * (seg1P2.x - seg1P1.x);
+    intersectionP1.y = seg1P1.y + ua * (seg1P2.y - seg1P1.y);
+    return 1;
 }
 
 Vector2D CollisionManager::getRectRectIntersectionLineVec(Rect& rect1, Rect& rect2){
