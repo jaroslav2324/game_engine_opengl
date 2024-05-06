@@ -56,6 +56,16 @@ void CollisionManager::pushCirFromStaticCir(Circle &cir1, Circle &staticCir){
     cir1.shift(shiftVector);
 }
 
+// reflects velocity of first body over velocity of second body 
+// if velocity of first body directs in the opposite normal direction
+// returns reflected(or not) velocity
+Vector2D CollisionManager::reflectVelocityIfDirectsAgainstNormal(Vector2D vel, Vector2D normalReflectOver){
+    if (vel.dot(normalReflectOver) < 0){
+        return vel - 2 * vel.dot(normalReflectOver) * normalReflectOver;
+    }
+    else return vel;
+}
+
 // simple velocity multiplication on elasticity coeff
 void CollisionManager::applyCollisionEnergyLoss(RigidBody &body){
     if (body.isElastic()){
@@ -65,6 +75,8 @@ void CollisionManager::applyCollisionEnergyLoss(RigidBody &body){
         }
     }
 }
+
+
 
 void CollisionManager::resolveCircleCircleCollision(Circle &cir1, Circle &cir2){
 
@@ -79,7 +91,7 @@ void CollisionManager::resolveCircleCircleCollision(Circle &cir1, Circle &cir2){
         // reflect velocity of cir2
         Vector2D normal = center2 - center1;
         normal = normal.normalize();
-        Vector2D reflectedVel2 = vel2 - 2 * vel2.dot(normal) * normal;
+        Vector2D reflectedVel2 = reflectVelocityIfDirectsAgainstNormal(vel2, normal);
 
         pushCirFromStaticCir(cir2, cir1);
         applyCollisionEnergyLoss(cir2);
@@ -91,7 +103,7 @@ void CollisionManager::resolveCircleCircleCollision(Circle &cir1, Circle &cir2){
         // reflect velocity of cir1
         Vector2D normal = center1 - center2;
         normal = normal.normalize();
-        Vector2D reflectedVel1 = vel1 - 2 * vel1.dot(normal) * normal;
+        Vector2D reflectedVel1 = reflectVelocityIfDirectsAgainstNormal(vel1, normal);
 
         pushCirFromStaticCir(cir1, cir2);
         applyCollisionEnergyLoss(cir2);
@@ -408,7 +420,7 @@ bool CollisionManager::pointOnSegment(Point2D point, Point2D segP1, Point2D segP
     float AB = sqrt((segP2.x-segP1.x)*(segP2.x-segP1.x)+(segP2.y-segP1.y)*(segP2.y-segP1.y));
     float AP = sqrt((point.x-segP1.x)*(point.x-segP1.x)+(point.y-segP1.y)*(point.y-segP1.y));
     float PB = sqrt((segP2.x-point.x)*(segP2.x-point.x)+(segP2.y-point.y)*(segP2.y-point.y));
-    if(AB - (AP + PB) < 1e-6)
+    if(std::abs(AB - (AP + PB)) < 1e-6)
         return true;
     return false;
 }
@@ -428,10 +440,10 @@ int CollisionManager::FindSegmentCircleIntersections(float cx, float cy, float r
     C = (segP1.x - cx) * (segP1.x - cx) + (segP1.y - cy) * (segP1.y - cy) - radius * radius;
 
     det = B * B - 4 * A * C;
-    if ((A <= 0.000001) || (det < 0)){
+    if ((A <= 0.000001) || (det < -1e-6)){
         return 0;
     }
-    else if (det == 0){
+    else if (std::abs(det) - 1e-6 < 1e-6){
         // One solution.
         t = -B / (2 * A);
         Point2D int1(segP1.x + t * dx, segP1.y + t * dy);
