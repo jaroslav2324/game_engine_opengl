@@ -103,14 +103,12 @@ void rocketMovingHandleTimer(int value){
 
 void startGameCallback(int value){
     // set random velocity direction
-    // float xDir = randomFloat(-1, 1);
-    // float yDir = randomFloat(-0.7, 0.7);
-    // Vector2D direction(xDir, yDir);
-    // direction = direction.normalize();
-    // direction *= ballSpeed;
-    // ball->setVelocity(direction);
-    Vector2D testVel(-500, 100);
-    ball->setVelocity(testVel);
+    float xDir = randomFloat(-1, 1);
+    float yDir = randomFloat(-0.7, 0.7);
+    Vector2D direction(xDir, yDir);
+    direction = direction.normalize();
+    direction *= ballSpeed;
+    ball->setVelocity(direction);
 }
 
 void startGame(){
