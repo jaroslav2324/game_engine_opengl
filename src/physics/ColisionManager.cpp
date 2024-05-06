@@ -7,14 +7,6 @@ bool CollisionManager::checkAABBintersection(const AABB &a, const AABB &b){
     return true;
 }
 
-void CollisionManager::calcVelocitiesMomentumConservation(float mass1, float mass2, float vel1, float vel2, 
-float &retVel1, float &retVel2){
-
-    float totalMass = mass1 + mass2;
-    retVel1 = ((mass1 - mass2) * vel1  + 2 * mass2 * vel2) / totalMass;
-    retVel2 = ((mass2 - mass1) * vel2  + 2 * mass1 * vel1) / totalMass;
-}
-
 
 void CollisionManager::resolveRigidRigidCollision(RigidBody &obj1, RigidBody &obj2){
 
@@ -36,6 +28,44 @@ void CollisionManager::resolveRigidRigidCollision(RigidBody &obj1, RigidBody &ob
     // TODO: add UNDEFINED handling
 }
 
+void CollisionManager::pushCirclesApart(Circle &cir1, Circle &cir2){
+    // // find how much to shift
+    float distNeeded = cir1.getRadius() + cir2.getRadius();
+    Vector2D distVec = cir1.getCenter() - cir2.getCenter();
+    float shift = distNeeded - distVec.length();
+    shift += 1e-3;
+
+    //  find shift vectors
+    Vector2D normal = distVec.normalize();
+    Vector2D shiftVector1 = shift / 2 * normal;
+    Vector2D shiftVector2 = -(shift / 2 * normal);
+
+    cir1.shift(shiftVector1);
+    cir2.shift(shiftVector2);
+}
+
+void CollisionManager::pushCirFromStaticCir(Circle &cir1, Circle &staticCir){
+    Point2D center1 = cir1.getCenter();
+    Point2D staticCenter = staticCir.getCenter();
+    Vector2D normal = center1 - staticCenter;
+    normal = normal.normalize();
+
+    float distance = center1.distanceTo(staticCenter);
+    float shift = cir1.getRadius() + staticCir.getRadius() - distance;
+    Vector2D shiftVector = shift * normal;
+    cir1.shift(shiftVector);
+}
+
+// simple velocity multiplication on elasticity coeff
+void CollisionManager::applyCollisionEnergyLoss(RigidBody &body){
+    if (body.isElastic()){
+        float elCoeff = body.getElasticityCoeff();
+        if (elCoeff < 1){
+            body.setVelocity(body.getVelocity() * (elCoeff));
+        }
+    }
+}
+
 void CollisionManager::resolveCircleCircleCollision(Circle &cir1, Circle &cir2){
 
     // std::cout << "Circle Circle Collision" << std::endl;
@@ -51,18 +81,8 @@ void CollisionManager::resolveCircleCircleCollision(Circle &cir1, Circle &cir2){
         normal = normal.normalize();
         Vector2D reflectedVel2 = vel2 - 2 * vel2.dot(normal) * normal;
 
-        // move cir 2 out of cir 1
-        float distance = center2.distanceTo(center1);
-        float shift = cir1.getRadius() + cir2.getRadius() - distance;
-        Vector2D shiftVector = shift * normal;
-        cir2.shift(shiftVector);
-
-        if (cir2.isElastic()){
-            float elCoeff = cir2.getElasticityCoeff();
-            if (elCoeff < 1){
-                reflectedVel2 += vel2.project(normal) * (1 - elCoeff);
-            }
-        }
+        pushCirFromStaticCir(cir2, cir1);
+        applyCollisionEnergyLoss(cir2);
         cir2.setVelocity(reflectedVel2);
 
         return;
@@ -73,18 +93,8 @@ void CollisionManager::resolveCircleCircleCollision(Circle &cir1, Circle &cir2){
         normal = normal.normalize();
         Vector2D reflectedVel1 = vel1 - 2 * vel1.dot(normal) * normal;
 
-        // move cir 1 out of cir 2
-        float distance = center1.distanceTo(center2);
-        float shift = cir1.getRadius() + cir2.getRadius() - distance;
-        Vector2D shiftVector = shift * normal;
-        cir1.shift(shiftVector);
-
-        if (cir1.isElastic()){
-            float elCoeff = cir1.getElasticityCoeff();
-            if (elCoeff < 1){
-                reflectedVel1 += vel1.project(normal) * (1 - elCoeff);
-            }
-        }
+        pushCirFromStaticCir(cir1, cir2);
+        applyCollisionEnergyLoss(cir2);
         cir1.setVelocity(reflectedVel1);
         return;
     }
@@ -92,101 +102,18 @@ void CollisionManager::resolveCircleCircleCollision(Circle &cir1, Circle &cir2){
     float mass1 = cir1.getMass();
     float mass2 = cir2.getMass();
 
-    // points in direction of cir1
-    Vector2D normal1 = center1 - center2;
-    normal1 = normal1.normalize();
-    // opposite directon
-    Vector2D normal2 = -normal1;
+    Vector2D distVec = center1 - center2;
 
-    // reflect vectors
-    Vector2D reflectedVel1, reflectedVel2;
-    float sumLength;
-    if (vel1.isZeroVector()){
-        reflectedVel1 = normal1;
-        sumLength -= 1; // length of normal
-    }
-    else{
-        if (vel1.dot(normal1) < 0){
-            reflectedVel1 = vel1 - 2 * vel1.dot(normal1) * normal1;
-        }
-        else{
-            reflectedVel1 = vel1;
-        }
-    }
-    if (vel2.isZeroVector()){
-        reflectedVel2 = normal2;
-        sumLength -= 1; // length of normal
-    }
-    else{
-        if (vel2.dot(normal2) < 0){
-            reflectedVel2 = vel2 - 2 * vel2.dot(normal2) * normal2;
-        }
-        else{
-            reflectedVel2 = vel2;
-        }
-    }
+    Vector2D u1 = vel1 + (2 * mass2 * distVec / ((mass1 + mass2) * distVec.dot(distVec))) * (vel2 - vel1).dot(distVec);
+    Vector2D u2 = vel2 - (2 * mass1 * distVec / ((mass1 + mass2) * distVec.dot(distVec))) * (vel2 - vel1).dot(distVec);
 
-    sumLength = reflectedVel1.length() + reflectedVel2.length();
-    float sumMass = mass1 + mass2;
+    pushCirclesApart(cir1, cir2);
 
-    float newLength1 = mass2 / sumMass * sumLength;
-    float newLength2 = mass1 / sumMass * sumLength;
-
-    if (!reflectedVel1.isZeroVector()){
-        if (vel1.dot(normal1) < 0){
-            float mulCoeff1 = newLength1 / reflectedVel1.length();
-            reflectedVel1 *= mulCoeff1;
-        }
-        else{
-            reflectedVel1 += normal1 * (reflectedVel1.length() - newLength1);
-        }
-    }
-    else{
-        reflectedVel1 = normal1 * newLength1;
-    }
-    if (!reflectedVel2.isZeroVector()){
-        if (vel2.dot(normal2) < 0){
-            float mulCoeff2 = newLength2 / reflectedVel2.length();
-            reflectedVel2 *= mulCoeff2;
-        }
-        else{
-            reflectedVel2 += normal2 * (reflectedVel2.length() - newLength2);
-        }
-    }
-    else{
-        reflectedVel2 = normal2 * newLength2;
-    }
-
-    // // find how much to shift
-    float distNeeded = cir1.getRadius() + cir2.getRadius();
-    Vector2D distActual = center1 - center2;
-    float shift = distNeeded - distActual.length();
-    shift += 1e-1;
-
-    //  find shift vectors
-    Vector2D shiftVector1 = shift / 2 * normal1;
-    Vector2D shiftVector2 = shift / 2 * normal2;
-
-    cir1.shift(shiftVector1);
-    cir2.shift(shiftVector2);
-
-    if (cir1.isElastic()){
-        float elCoeff = cir1.getElasticityCoeff();
-        if (elCoeff < 1){
-            reflectedVel1 += vel1.project(normal1) * (1 - elCoeff);
-        }
-    }
-    if (cir2.isElastic()){
-        float elCoeff = cir2.getElasticityCoeff();
-        if (elCoeff < 1){
-            reflectedVel2 += vel2.project(normal2) * (1 - elCoeff);
-        }
-    }
-
-    cir1.setVelocity(reflectedVel1);
-    cir2.setVelocity(reflectedVel2);
+    cir1.setVelocity(u1);
+    cir2.setVelocity(u2);
 }
 
+// TODO Finish
 void CollisionManager::resolveCircleRectCollision(Circle &obj1, Rect &obj2){
 
     // std::cout << "CircleRectCollision" << std::endl;
@@ -258,8 +185,8 @@ void CollisionManager::resolveCircleRectCollision(Circle &obj1, Rect &obj2){
     // momentum conservation
     Vector2D newVel1, newVel2;
 
-    calcVelocitiesMomentumConservation(mass1, mass2, vel1.x, vel2.x, newVel1.x, newVel2.x);
-    calcVelocitiesMomentumConservation(mass1, mass2, vel1.y, vel2.y, newVel1.y, newVel2.y);
+    // calcVelocitiesMomentumConservation(mass1, mass2, vel1.x, vel2.x, newVel1.x, newVel2.x);
+    // calcVelocitiesMomentumConservation(mass1, mass2, vel1.y, vel2.y, newVel1.y, newVel2.y);
 
     Point2D center1 = obj1.getCenter();
     Point2D center2 = obj2.getCenter();
@@ -285,6 +212,7 @@ void CollisionManager::resolveCircleRectCollision(Circle &obj1, Rect &obj2){
     obj2.setVelocity(newVel2);
 }
 
+// TODO FInish
 void CollisionManager::resolveRectRectCollision(Rect &obj1, Rect &obj2){
 
     // std::cout << "RectRectCollision" << std::endl;
@@ -344,8 +272,8 @@ void CollisionManager::resolveRectRectCollision(Rect &obj1, Rect &obj2){
     // momentum conservation
     Vector2D newVel1, newVel2;
 
-    calcVelocitiesMomentumConservation(mass1, mass2, vel1.x, vel2.x, newVel1.x, newVel2.x);
-    calcVelocitiesMomentumConservation(mass1, mass2, vel1.y, vel2.y, newVel1.y, newVel2.y);
+    // calcVelocitiesMomentumConservation(mass1, mass2, vel1.x, vel2.x, newVel1.x, newVel2.x);
+    // calcVelocitiesMomentumConservation(mass1, mass2, vel1.y, vel2.y, newVel1.y, newVel2.y);
 
     Point2D center1 = obj1.getCenter();
     Point2D center2 = obj2.getCenter();
@@ -575,6 +503,8 @@ Vector2D CollisionManager::getCircleRectIntersectionLineVec(Circle &cir, Rect &r
 
     return Vector2D(inter1.x - inter2.x, inter1.y - inter2.y);
 }
+
+
 
 void CollisionManager::fillRectSegments(Point2D center, float width, float height, Point2D *segsX, Point2D* segsY){
     segsX[0] = Point2D(center.x - width/2, center.y - height/2);

@@ -65,28 +65,30 @@ void loadBasicScene(ObjectManager& objManager){
     Circle* cir1 = objManager.createCircle(Point2D(450, 200), 100);
     cir1->setCircleColor({1.0f, 0.0f, 0.0f});
     cir1->setGravityScale(0);
-    cir1->setVelocity(Vector2D(550, 50));
+    // cir1->setStatic(true);
+    // cir1->setVelocity(Vector2D(550, 50));
     cir1->setRenderEdges(true);
     cir1->setElastic(0.8);
     cir1->setMass(1000);
 
-    Circle* cir2 = objManager.createCircle(Point2D(600, 600), 100);
-    cir2->setCircleColor({0.0f, 0.7f, 0.0f});
-    cir2->setGravityScale(0);
-    cir2->setVelocity(Vector2D(-600, -300));
-    cir2->setMass(100);
-    cir2->setRenderEdges(true);
+    // Circle* cir2 = objManager.createCircle(Point2D(600, 600), 100);
+    // cir2->setCircleColor({0.0f, 0.7f, 0.0f});
+    // cir2->setGravityScale(0);
+    // cir2->setVelocity(Vector2D(-600, -300));
+    // cir2->setMass(100);
+    // cir2->setRenderEdges(true);
 
 
     Circle* cir3 = objManager.createCircle(Point2D(800, 200), 100);
     cir3->setCircleColor({0.0f, 1.0f, 1.0f});
+    cir3->setVelocity(Vector2D(550, 50));
     cir3->setGravityScale(0);
     cir3->setRenderEdges(true);
 
-    Circle* cir4 = objManager.createCircle(Point2D(300, 400), 100);
-    cir4->setCircleColor({0.0f, 0.0f, 0.7f});
-    cir4->setGravityScale(0);
-    cir4->setRenderEdges(true);
+    // Circle* cir4 = objManager.createCircle(Point2D(300, 400), 100);
+    // cir4->setCircleColor({0.0f, 0.0f, 0.7f});
+    // cir4->setGravityScale(0);
+    // cir4->setRenderEdges(true);
 }
 
 void loadPingPong(ObjectManager& objManager){
@@ -119,8 +121,8 @@ int main(int argc, char** argv) {
     ColorRGB color;
 
     ObjectManager objManager(&renderer, &collisionManager, &physicsManager);
-    //loadBasicScene(objManager);
-    loadPingPong(objManager);
+    loadBasicScene(objManager);
+    // loadPingPong(objManager);
 
     // Пример использования
     glutInit(&argc, argv);

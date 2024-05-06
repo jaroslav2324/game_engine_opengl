@@ -39,10 +39,12 @@ public:
     Vector2D getRectRectIntersectionLineVec(Rect& rect1, Rect& rect2);
 
     void fillRectSegments(Point2D center, float width, float heinght, Point2D* segsX, Point2D* segsY);
-    
 
-    // returns scalar velocities
-    void calcVelocitiesMomentumConservation(float mass1, float mass2, float vel1, float vel2, float& retVel1, float& retVel2);
+    void pushCirclesApart(Circle& cir1, Circle& cir2);
+    void pushCirFromStaticCir(Circle& cir1, Circle& staticCir);
+
+    // simple velocity multiplication on elasticity coeff
+    void applyCollisionEnergyLoss(RigidBody& body);
 
     std::vector<CollidableObject*> collidableObjects;
 
