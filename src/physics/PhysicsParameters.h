@@ -2,8 +2,7 @@
 
 #include <iostream>
 #include "../maths/Vector2D.h"
-
-#define G 9.81
+#include "../physics/gravity.h"
 
 // struct for physics parameters
 struct PhysicsParameters
