@@ -46,7 +46,7 @@ void timerCallback60sec(int value){
 
 // collosion checks per sec
 void cpsChecker(int value){
-    // std::cout << "CPS: " << cps << std::endl;
+    std::cout << "CPS: " << cps << std::endl;
     cps = 0;
     glutTimerFunc(1000, cpsChecker, 123);
 }
@@ -67,9 +67,6 @@ int main(int argc, char** argv) {
     // loadTestRectsScene(objManager);
     loadSoftbodyScene(objManager);
 
-    // Пример использования
-    
-    // glutTimerFunc(0, timerCallback60sec, 123);
     glutTimerFunc(1000 / 60, timerCallback60sec, 123);
     glutTimerFunc(1000, cpsChecker, 123);
     glutMouseFunc(mouseClick);

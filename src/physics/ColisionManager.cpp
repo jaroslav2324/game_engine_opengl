@@ -8,6 +8,50 @@ bool CollisionManager::checkAABBintersection(const AABB &a, const AABB &b){
 }
 
 
+
+bool CollisionManager::checkSoftPointRectIntersection(SoftbodyPoint &point, Rect &rect){
+
+    Point2D posCir = point.position;
+    Point2D posRect = rect.getCollisionShape()->getPosition();
+    float radius = point.collisionShape.radius;
+    float rectWidth = rect.getWidth();
+    float rectHeight = rect.getHeight();
+
+    float distanceX = std::abs(posCir.x - posRect.x);
+    float distanceY = std::abs(posCir.y - posRect.y);
+
+    if (distanceX > (rectWidth / 2 + radius))
+        return false;
+    if (distanceY > (rectHeight / 2 + radius))
+        return false;
+    if (distanceX <= (rectWidth / 2))
+        return true;
+    if (distanceY <= (rectHeight / 2))
+        return true;
+
+    float squaredCornerDistance = pow((distanceX - rectWidth / 2), 2) + pow((distanceY - rectHeight / 2), 2);
+    return (squaredCornerDistance <= pow(radius, 2));
+}
+
+void CollisionManager::checkResolveSoftRectCollision(Softbody &soft, Rect &rect){
+    for (auto& point: soft.getPoints()){
+        if(checkSoftPointRectIntersection(point, rect)){
+            Vector2D lineVec = getSoftPointRectIntersectionLineVec(point, rect);
+            if (lineVec.isZeroVector()){
+                continue;
+            }
+            Vector2D normal(-lineVec.y, lineVec.x);
+            normal = normal.normalize();
+            if (point.physicsParameters.velocityVec.dot(normal) > 0){
+                normal = -normal;
+            }
+            pushSoftPointFromStaticRect(point, rect, normal);
+            Vector2D newVel = reflectVelocityIfDirectsAgainstNormal(point.physicsParameters.velocityVec, normal);
+            point.physicsParameters.velocityVec = newVel;
+        }
+    }   
+}
+
 void CollisionManager::resolveRigidRigidCollision(RigidBody &obj1, RigidBody &obj2){
 
     RigidBodyType rigType1 = obj1.getRigBodyType();
@@ -63,6 +107,15 @@ void CollisionManager::pushCirFromStaticRect(Circle & cir, Rect & rect, Vector2D
     do {
         cir.shift(shiftVec);
     } while(checkCircleRectIntersection(cir, rect));
+}
+
+void CollisionManager::pushSoftPointFromStaticRect(SoftbodyPoint &point, Rect &rect, Vector2D shiftAlongNormal){
+    // TODO change
+    Vector2D shiftVec = shiftAlongNormal.normalize();
+    do {
+        point.position.x += shiftVec.x;
+        point.position.y += shiftVec.y;
+    } while(checkSoftPointRectIntersection(point, rect));
 }
 
 // reflects velocity of first body over velocity of second body 
@@ -436,8 +489,26 @@ void CollisionManager::resolveCollisions(){
                 }
                 continue;
             }
+            // one soft, one rigid
+            if (obj1->getObjectType() == ObjectType::SOFTBODY && obj2->getObjectType() == ObjectType::RIGIDBODY ||
+            obj1->getObjectType() == ObjectType::RIGIDBODY && obj2->getObjectType() == ObjectType::SOFTBODY){
+                Softbody* soft;
+                RigidBody* rigid;
+                if (obj1->getObjectType() == ObjectType::SOFTBODY){
+                    soft = (Softbody*)obj1;
+                    rigid = (RigidBody*)obj2;
+                }
+                else{
+                    soft = (Softbody*)obj2;
+                    rigid = (RigidBody*)obj1;
+                }
 
-            //TODO add softbody
+                if (rigid->getRigBodyType() == RigidBodyType::RECT){
+                    checkResolveSoftRectCollision(*soft, (Rect&)*rigid);                         
+                }
+
+                continue;
+            }
         }
     }
 }
@@ -624,4 +695,50 @@ Vector2D CollisionManager::getRectRectIntersectionLineVec(Rect& rect1, Rect& rec
     }
 
     return Vector2D(interPoints[0].x - interPoints[1].x, interPoints[0].y - interPoints[1].y);
+}
+
+Vector2D CollisionManager::getSoftPointRectIntersectionLineVec(SoftbodyPoint &point, Rect &rect){
+    float radius = point.collisionShape.radius;
+    float cx = point.position.x;
+    float cy = point.position.y;
+
+    // create segments
+    Point2D segsP1[4];
+    Point2D segsP2[4];
+    fillRectSegments(rect.getCenter(), rect.getWidth(), rect.getHeight(), segsP1, segsP2);
+
+    int countInters = 0;
+    Point2D inters[8];
+    int idxCurrEmptyInter = 0;
+    Point2D inter1;
+    Point2D inter2;
+    for (int segIdx = 0; segIdx < 4; segIdx++){
+        int count = FindSegmentCircleIntersections(cx, cy, radius, segsP1[segIdx], segsP2[segIdx], inter1, inter2);
+        if (count == 2){
+            inters[idxCurrEmptyInter] = inter1;
+            idxCurrEmptyInter++;
+            inters[idxCurrEmptyInter] = inter2;
+            idxCurrEmptyInter++;
+        }
+        if (count == 1){
+            inters[idxCurrEmptyInter] = inter1;
+            idxCurrEmptyInter++;
+        }
+        countInters += count;
+    }
+    if (countInters < 1 || countInters > 2){
+        int a = 1;
+        std::cout << "ERROR: amount intersections of soft point and rect is " << countInters << "\n";
+        return Vector2D(0, 0);
+    }
+    // corner collision
+    if (countInters == 1){
+        Vector2D fromCenterVec = inters[0] - point.position;
+        std::cout << "Corner collision" << std::endl;
+        // TODO change
+        return Vector2D(-fromCenterVec.y, fromCenterVec.x);
+    }
+    inter1 = inters[0];
+    inter2 = inters[1];
+    return Vector2D(inter1.x - inter2.x, inter1.y - inter2.y);
 }

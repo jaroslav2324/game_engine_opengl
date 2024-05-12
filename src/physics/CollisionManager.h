@@ -28,6 +28,9 @@ public:
     bool checkCircleCircleIntersection( Circle& obj1, Circle& obj2);
     bool checkCircleRectIntersection (Circle& obj1, Rect& obj2);
     bool checkAABBintersection(const AABB& a, const AABB& b);
+    bool checkSoftPointRectIntersection(SoftbodyPoint& point, Rect& rect);
+
+    void checkResolveSoftRectCollision(Softbody& soft, Rect& rect);
 
     bool pointOnSegment(Point2D point, Point2D segP1, Point2D segP2);
     int FindSegmentCircleIntersections(float cx, float cy, float radius,
@@ -38,12 +41,15 @@ public:
                                         Point2D seg2P1, Point2D seg2P2,   
                                         Point2D& intersectionP1);
     Vector2D getRectRectIntersectionLineVec(Rect& rect1, Rect& rect2);
+    Vector2D getSoftPointRectIntersectionLineVec(SoftbodyPoint& point, Rect& rect);
 
     void fillRectSegments(Point2D center, float width, float heinght, Point2D* segsX, Point2D* segsY);
 
     void pushCirclesApart(Circle& cir1, Circle& cir2);
     void pushCirFromStaticCir(Circle& cir1, Circle& staticCir);
     void pushCirFromStaticRect(Circle& cir, Rect& staticRect, Vector2D shiftAlongNormal);
+    void pushSoftPointFromStaticRect(SoftbodyPoint& point, Rect& rect, Vector2D shiftAlongNormal);
+
     Vector2D reflectVelocityIfDirectsAgainstNormal(Vector2D vel, Vector2D normalReflectOver);
 
     bool checkObjAABBintersect(CollidableObject& obj1, CollidableObject& obj2);
