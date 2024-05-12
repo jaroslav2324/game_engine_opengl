@@ -56,6 +56,15 @@ void CollisionManager::pushCirFromStaticCir(Circle &cir1, Circle &staticCir){
     cir1.shift(shiftVector);
 }
 
+
+void CollisionManager::pushCirFromStaticRect(Circle & cir, Rect & rect, Vector2D shiftAlongNormal){
+    // TODO change
+    Vector2D shiftVec = shiftAlongNormal.normalize();
+    do {
+        cir.shift(shiftVec);
+    } while(checkCircleRectIntersection(cir, rect));
+}
+
 // reflects velocity of first body over velocity of second body 
 // if velocity of first body directs in the opposite normal direction
 // returns reflected(or not) velocity
@@ -174,13 +183,7 @@ void CollisionManager::resolveCircleRectCollision(Circle &obj1, Rect &obj2){
         normal = normal.normalize();
         Vector2D reflectedVel = vel1 - 2 * vel1.dot(normal) * normal;
         // move rect out of cir
-        // TODO change
-        int shiftVal = 1;
-        Vector2D normedVel = reflectedVel;
-        normedVel = normedVel.normalize();
-        while(checkCircleRectIntersection(obj1, obj2)){
-            obj1.shift(shiftVal * normedVel);
-        }
+        pushCirFromStaticRect(obj1, obj2, normal);
         if (obj1.isElastic()){
             float elCoeff = obj1.getElasticityCoeff();
             if (elCoeff < 1){
@@ -514,7 +517,15 @@ Vector2D CollisionManager::getCircleRectIntersectionLineVec(Circle &cir, Rect &r
     if (countInters < 1 || countInters > 2){
         std::cout << "ERROR: amount intersections of rect and circle is " << countInters << "\n";
     }
-
+    // corner collision
+    if (countInters == 1){
+        Vector2D fromCenterVec = inters[0] - cir.getCenter();
+        std::cout << "Corner collision" << std::endl;
+        // TODO change
+        return Vector2D(-fromCenterVec.y, fromCenterVec.x);
+    }
+    inter1 = inters[0];
+    inter2 = inters[1];
     return Vector2D(inter1.x - inter2.x, inter1.y - inter2.y);
 }
 

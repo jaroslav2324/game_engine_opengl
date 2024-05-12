@@ -42,6 +42,7 @@ public:
 
     void pushCirclesApart(Circle& cir1, Circle& cir2);
     void pushCirFromStaticCir(Circle& cir1, Circle& staticCir);
+    void pushCirFromStaticRect(Circle& cir, Rect& staticRect, Vector2D shiftAlongNormal);
     Vector2D reflectVelocityIfDirectsAgainstNormal(Vector2D vel, Vector2D normalReflectOver);
 
     // simple velocity multiplication on elasticity coeff
