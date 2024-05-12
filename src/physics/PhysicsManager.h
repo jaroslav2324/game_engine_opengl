@@ -2,6 +2,7 @@
 
 #include "../objects/CollidableObject.h"
 #include "../objects/RigidBody.h"
+#include "../objects/Softbody.h"
 #include <algorithm>
 #include <vector>
 

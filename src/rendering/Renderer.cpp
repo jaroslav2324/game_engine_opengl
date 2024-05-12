@@ -2,6 +2,7 @@
 
 void Renderer::render(){
     drawRigidBodies();
+    drawSoftBodies();
 }
 
 void Renderer::renderTriangles(std::vector<NodesEdgesTriangles>& triangles){
@@ -22,6 +23,14 @@ void Renderer::removeRigBodyFromPtrs(RigidBody *body){
     rigidBodies.erase(std::remove(rigidBodies.begin(), rigidBodies.end(), body), rigidBodies.end());
 }
 
+void Renderer::addSoftBodyToPtrs(Softbody *body){
+    softBodies.push_back(body);
+}
+
+void Renderer::removeSoftBodyFromPtrs(Softbody *body){
+    softBodies.erase(std::remove(softBodies.begin(), softBodies.end(), body), softBodies.end());
+}
+
 void Renderer::setOpenGLColor(ColorRGB &color){
     glColor3f(color.r, color.g, color.b);
 }
@@ -38,6 +47,27 @@ void Renderer::drawRigidBodies(){
         }
         else{
             // TODO add error handling
+        }
+    }
+}
+
+void Renderer::drawSoftBodies(){
+    for (auto bodyPtr: softBodies){
+        if (bodyPtr->isSetRenderPoints()){
+            ColorRGB pointsColor = bodyPtr->getPointsColor();
+            setOpenGLColor(pointsColor);
+            auto points = bodyPtr->getPoints();
+            for (auto point: points){  
+                drawSoftPoint(point);
+            }
+        }
+        if (bodyPtr->isSetRenderSprings()){
+            ColorRGB springsColor = bodyPtr->getSpringsColor();
+            setOpenGLColor(springsColor);
+            auto springs = bodyPtr->getSprings();
+            for (auto spring: springs){
+                drawSoftSpring(spring);
+            }
         }
     }
 }
@@ -96,6 +126,35 @@ void Renderer::drawEdges(std::vector<NodesEdgesTriangles> &trianglesVec){
    glEnd();
 }
 
+void Renderer::drawSoftPoint(SoftbodyPoint &point){
+
+    float radius = point.collisionShape.radius;
+    Point2D center = point.position;
+
+    glBegin(GL_LINE_LOOP);
+    for(int i = 0; i < softbodyCircleSegments; i++)
+    {
+        float theta = 2.0f * 3.1415926f * float(i) / float(softbodyCircleSegments);
+        float x = radius * cosf(theta);
+        float y = radius * sinf(theta);
+        Point2D normedCoords(x + center.x, y + center.y);
+        normedCoords = coordsToNormed(normedCoords);
+        glVertex2f(normedCoords.x, normedCoords.y);
+    }
+    glEnd();
+}
+
+void Renderer::drawSoftSpring(SoftbodySpring &spring){
+    Point2D p1 = spring.point1->position;
+    Point2D p2 = spring.point2->position;
+    Point2D normed1 = coordsToNormed(p1);
+    Point2D normed2 = coordsToNormed(p2);
+    glBegin(GL_LINES);
+    glVertex2f(normed1.x, normed1.y);
+    glVertex2f(normed2.x, normed2.y);
+    glEnd();
+}
+
 // maps pixel coords to -1 to 1 (physical coords to viewport coords)
 Node Renderer::coordsToNormed(Node& node){
 
@@ -104,4 +163,11 @@ Node Renderer::coordsToNormed(Node& node){
     normedNode.x = -1.0 + 2.0 * (node.x - 0) / (float)(winWidth - 0);
     normedNode.y =  2 * (1 - ((node.y - 0) / (float)(winHeight - 0))) - 1;
     return normedNode;
+}
+
+Point2D Renderer::coordsToNormed(Point2D &point){
+    Point2D normedPoint;
+    normedPoint.x = -1.0 + 2.0 * (point.x - 0) / (float)(winWidth - 0);
+    normedPoint.y =  2 * (1 - ((point.y - 0) / (float)(winHeight - 0))) - 1;
+    return normedPoint;
 }

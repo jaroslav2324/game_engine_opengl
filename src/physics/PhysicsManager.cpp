@@ -13,5 +13,8 @@ void PhysicsManager::updatePhysics(float dt){
         if (object->getObjectType() == ObjectType::RIGIDBODY){
             ((RigidBody*)object)->applyPhysics(dt);
         }
+        if (object->getObjectType() == ObjectType::SOFTBODY){
+            ((Softbody*)object)->applyPhysics(dt);
+        }
     }
 }

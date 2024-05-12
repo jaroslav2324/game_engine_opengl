@@ -11,6 +11,8 @@ g++ -g src/main.cpp \
  src/objects/CollidableObject.cpp \
  src/objects/RigidBody.cpp \
  src/objects/ObjectManager.cpp \
+ src/objects/Softbody.cpp \
+ src/objects/SoftbodyRect.cpp \
  src/utils/randomGeneration.cpp \
  src/utils/Color.cpp \
  src/physics/PhysicsParameters.cpp \
@@ -21,4 +23,7 @@ g++ -g src/main.cpp \
  src/physics/ColisionManager.cpp \
  src/scenes/Scenes.cpp \
  src/scenes/PingPong.cpp \
+ src/scenes/SoftbodyScene.cpp \
+ src/softbody/SoftbodyPoint.cpp \
+ src/softbody/SoftbodySpring.cpp \
  -o collisionEngine -lglut -lGLU -lGL

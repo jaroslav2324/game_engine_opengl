@@ -4,6 +4,7 @@
 
 #include "../objects/Circle.h"
 #include "../objects/Rect.h"
+#include "../objects/SoftbodyRect.h"
 #include "../maths/Matrix2x2.h"
 
 
@@ -44,6 +45,8 @@ public:
     void pushCirFromStaticCir(Circle& cir1, Circle& staticCir);
     void pushCirFromStaticRect(Circle& cir, Rect& staticRect, Vector2D shiftAlongNormal);
     Vector2D reflectVelocityIfDirectsAgainstNormal(Vector2D vel, Vector2D normalReflectOver);
+
+    bool checkObjAABBintersect(CollidableObject& obj1, CollidableObject& obj2);
 
     // simple velocity multiplication on elasticity coeff
     void applyCollisionEnergyLoss(RigidBody& body);

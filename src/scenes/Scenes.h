@@ -9,6 +9,8 @@ void loadBasicScene(ObjectManager& objManager);
 void loadTestRectsScene(ObjectManager& objManager);
 // creates poing pong scene
 void loadPingPong(ObjectManager& objManager);
+// creates softbody scene
+void loadSoftbodyScene(ObjectManager& objManager);
 
 void loadBorders(ObjectManager& objManager);
 

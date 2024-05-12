@@ -12,7 +12,7 @@ public:
 
     Rect* createRect(Point2D center, float width, float height);
     Circle* createCircle(Point2D center, float radius);
-
+    Softbody* createSoftRect(Point2D center, float width, float height);
 
 
 private:

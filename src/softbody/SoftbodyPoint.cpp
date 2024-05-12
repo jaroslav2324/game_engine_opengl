@@ -16,13 +16,13 @@ void SoftbodyPoint::applyPhysics(float deltaTime){
 
     applyVelocity(deltaTime);
 
-    this->physicsParameters.forceVec = {0, 0};
+    this->physicsParameters.forceVec.x = 0;
+    this->physicsParameters.forceVec.y = 0;
 }
 
 void SoftbodyPoint::applyVelocity(float deltaTime){
     // apply velocity
-    //? deltaTime needed?
-    this->physicsParameters.velocityVec += this->physicsParameters.forceVec / this->physicsParameters.mass * deltaTime;
+    this->physicsParameters.velocityVec += this->physicsParameters.forceVec / this->physicsParameters.mass;
     position.x += this->physicsParameters.velocityVec.x * deltaTime;
     position.y += this->physicsParameters.velocityVec.y * deltaTime;
 }

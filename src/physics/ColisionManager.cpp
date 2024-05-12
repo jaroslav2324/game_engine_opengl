@@ -75,6 +75,29 @@ Vector2D CollisionManager::reflectVelocityIfDirectsAgainstNormal(Vector2D vel, V
     else return vel;
 }
 
+bool CollisionManager::checkObjAABBintersect(CollidableObject& obj1, CollidableObject& obj2){
+    ObjectType type1 = obj1.getObjectType();
+    ObjectType type2 = obj2.getObjectType();
+
+    AABB aabb1(0, 0, 0, 0);
+    AABB aabb2(0, 0, 0, 0);
+
+    if (type1 == ObjectType::RIGIDBODY){
+        aabb1 = ((RigidBody&)obj1).getCollisionShape()->getAABB();
+    }
+    else if (type1 == ObjectType::SOFTBODY){
+        aabb1 = ((Softbody&)obj1).getAABB();
+    }
+    if (type2 == ObjectType::RIGIDBODY){
+        aabb2 = ((RigidBody&)obj2).getCollisionShape()->getAABB();
+    }
+    else if (type2 == ObjectType::SOFTBODY){
+        aabb2 = ((Softbody&)obj2).getAABB();
+    }
+
+    return checkAABBintersection(aabb1, aabb2);
+}
+
 // simple velocity multiplication on elasticity coeff
 void CollisionManager::applyCollisionEnergyLoss(RigidBody &body){
     if (body.isElastic()){
@@ -367,7 +390,7 @@ void CollisionManager::resolveCollisions(){
             CollidableObject* obj2 = collidableObjects[j];
 
             // definetely no collision
-            if (!checkAABBintersection(obj1->getCollisionShape()->getAABB(), obj2->getCollisionShape()->getAABB())){
+            if (!checkObjAABBintersect(*obj1, *obj2)){
                 continue;
             }
 

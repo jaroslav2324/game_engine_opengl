@@ -7,8 +7,9 @@
 
 struct SoftbodyPoint{
 
+    SoftbodyPoint(Point2D pos): position(pos){};
     Point2D position;
-    SoftbodyPointCollisionShape collisionShape;
+    SoftbodyPointCollisionShape collisionShape;                                                                                                                              
     SoftbodyPointPhysicsParameters physicsParameters;
 
     AABB getCollShapeAABB();
