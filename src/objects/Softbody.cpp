@@ -77,16 +77,16 @@ AABB Softbody::getAABB(){
     maxY = minY;
     for (auto point: points){
         if (point.position.x < minX){
-            minX = point.position.x;
+            minX = point.position.x - point.collisionShape.radius;
         }
         if (point.position.x > maxX){
-            maxX = point.position.x;
+            maxX = point.position.x + point.collisionShape.radius;
         }
         if (point.position.y < minY){
-            minY = point.position.y;
+            minY = point.position.y - point.collisionShape.radius; 
         }
         if (point.position.y > maxY){
-            maxY = point.position.y;
+            maxY = point.position.y + point.collisionShape.radius;
         }
     }
 

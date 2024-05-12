@@ -3,7 +3,7 @@
 SoftbodyRect::SoftbodyRect(Point2D center, float width, float height)
 : Softbody(SoftbodyType::SOFTBODY_RECT){
 
-    float tempStifness = 10.0f;
+    float tempStifness = 0.1f;
 
     points.push_back(SoftbodyPoint({center.x - width / 2, center.y - height / 2}));
     points.push_back(SoftbodyPoint({center.x + width / 2, center.y - height / 2}));

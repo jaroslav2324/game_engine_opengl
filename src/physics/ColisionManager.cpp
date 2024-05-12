@@ -7,8 +7,6 @@ bool CollisionManager::checkAABBintersection(const AABB &a, const AABB &b){
     return true;
 }
 
-
-
 bool CollisionManager::checkSoftPointRectIntersection(SoftbodyPoint &point, Rect &rect){
 
     Point2D posCir = point.position;
