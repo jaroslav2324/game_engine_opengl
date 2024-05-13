@@ -1,5 +1,6 @@
 #include "CollisionManager.h"
 
+// TODO move to AABB
 bool CollisionManager::checkAABBintersection(const AABB &a, const AABB &b){
 
     if (a.x > b.x + b.w || a.x + a.w < b.x || a.y > b.y + b.h || a.y + a.h < b.y)
@@ -8,27 +9,9 @@ bool CollisionManager::checkAABBintersection(const AABB &a, const AABB &b){
 }
 
 bool CollisionManager::checkSoftPointRectIntersection(SoftbodyPoint &point, Rect &rect){
-
-    Point2D posCir = point.position;
-    Point2D posRect = rect.getCollisionShape()->getPosition();
-    float radius = point.collisionShape.radius;
-    float rectWidth = rect.getWidth();
-    float rectHeight = rect.getHeight();
-
-    float distanceX = std::abs(posCir.x - posRect.x);
-    float distanceY = std::abs(posCir.y - posRect.y);
-
-    if (distanceX > (rectWidth / 2 + radius))
-        return false;
-    if (distanceY > (rectHeight / 2 + radius))
-        return false;
-    if (distanceX <= (rectWidth / 2))
-        return true;
-    if (distanceY <= (rectHeight / 2))
-        return true;
-
-    float squaredCornerDistance = pow((distanceX - rectWidth / 2), 2) + pow((distanceY - rectHeight / 2), 2);
-    return (squaredCornerDistance <= pow(radius, 2));
+    mathsCircle mCir = point.getMathsCircle();
+    mathsRect mRect = rect.getMathsRect();
+    return mCir.intersectsRect(mRect);
 }
 
 void CollisionManager::checkResolveSoftRectCollision(Softbody &soft, Rect &rect){
