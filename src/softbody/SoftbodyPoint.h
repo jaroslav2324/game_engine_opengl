@@ -15,6 +15,9 @@ struct SoftbodyPoint{
 
     AABB getCollShapeAABB();
     mathsCircle getMathsCircle();
+    void setPosition(Point2D pos);
+
+    bool coordsInsideCollidableArea(Point2D coords);
 
     void debugPrint();
 

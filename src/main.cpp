@@ -26,13 +26,6 @@ void displayMe(void) {
     glutSwapBuffers();
 }
 
-void mouseClick(int button, int state, int x, int y) {
-
-    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-        std::cout << "left mouse button pressed" << std::endl;
-    }
-}
-
 int cps = 0;
 
 void timerCallback60sec(int value){
@@ -69,7 +62,6 @@ int main(int argc, char** argv) {
 
     glutTimerFunc(1000 / 60, timerCallback60sec, 123);
     glutTimerFunc(1000, cpsChecker, 123);
-    glutMouseFunc(mouseClick);
     glutMainLoop();
 
     std::cout << "Exiting..." << std::endl;

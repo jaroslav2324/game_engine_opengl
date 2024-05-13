@@ -25,6 +25,8 @@ public:
     std::vector<SoftbodyPoint>& getPoints();
     std::vector<SoftbodySpring>& getSprings();
 
+    SoftbodyPoint* getPointIfCollisionShapeContains(Point2D containsThis);
+
     ColorRGB getTrianglesColor();
     ColorRGB getPointsColor();
     ColorRGB getSpringsColor();

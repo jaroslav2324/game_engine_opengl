@@ -49,13 +49,13 @@ void loadTestRectsScene(ObjectManager &objManager){
 }
 
 void loadBorders(ObjectManager &objManager){
-    Rect* borderRect1 = objManager.createRect(Point2D(0, 400), 50, 900);
+    Rect* borderRect1 = objManager.createRect(Point2D(-50, 400), 120, 900);
     borderRect1->setStatic(true);
-    Rect* borderRect2 = objManager.createRect(Point2D(500, 0), 1100, 50);
+    Rect* borderRect2 = objManager.createRect(Point2D(500, -50), 1100, 120);
     borderRect2->setStatic(true);
-    Rect* borderRect3 = objManager.createRect(Point2D(1000, 400), 50, 900);
+    Rect* borderRect3 = objManager.createRect(Point2D(1050, 400), 120, 900);
     borderRect3->setStatic(true);
-    Rect* borderRect4 = objManager.createRect(Point2D(500, 800), 1100, 50);
+    Rect* borderRect4 = objManager.createRect(Point2D(500, 850), 1100, 120);
     borderRect4->setStatic(true);
 }
 

@@ -9,6 +9,15 @@ mathsCircle SoftbodyPoint::getMathsCircle(){
     return mathsCircle(position, collisionShape.radius);
 }
 
+void SoftbodyPoint::setPosition(Point2D pos){  
+    position = pos;
+}
+
+bool SoftbodyPoint::coordsInsideCollidableArea(Point2D coords){
+    float distance = position.distanceTo(coords);
+    return distance <= collisionShape.radius;
+}
+
 void SoftbodyPoint::debugPrint(){
     std::cout << "SoftbodyPoint: ()" << position.x << ", " << position.y << ")\n";
 }

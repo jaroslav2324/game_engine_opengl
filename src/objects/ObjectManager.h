@@ -16,6 +16,8 @@ public:
     Softbody* createSoftRect(Point2D center, float width, float height);
     Softbody* createSoftCircle(Point2D center, float radius, int numPoints);
 
+    SoftbodyPoint* getSoftbodyPointContaining(Point2D containedCoords);
+
 private:
     void addPtrToManagers(CollidableObject* ptr);
 

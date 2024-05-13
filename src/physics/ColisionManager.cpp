@@ -19,7 +19,9 @@ void CollisionManager::checkResolveSoftRectCollision(Softbody &soft, Rect &rect)
         if(checkSoftPointRectIntersection(point, rect)){
             Vector2D lineVec = getSoftPointRectIntersectionLineVec(point, rect);
             if (lineVec.isZeroVector()){
-                continue;
+                Vector2D currVel = point.physicsParameters.velocityVec;
+                lineVec.x = -currVel.y;
+                lineVec.y = currVel.x;
             }
             Vector2D normal(-lineVec.y, lineVec.x);
             normal = normal.normalize();

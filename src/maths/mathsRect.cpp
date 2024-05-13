@@ -56,7 +56,11 @@ Vector2D mathsRect::getIntersectionLineVecCircle(mathsCircle &circle){
         }
         countInters += count;
     }
-    if (countInters < 1 || countInters > 2){
+    if (countInters == 0){
+        return Vector2D(0, 0);
+    }
+
+    if (countInters > 2){
         std::cout << "ERROR: amount intersections of rect and circle is " << countInters << "\n";
     }
     // corner collision

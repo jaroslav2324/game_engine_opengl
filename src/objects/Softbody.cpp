@@ -31,6 +31,15 @@ std::vector<SoftbodySpring> &Softbody::getSprings(){
     return springs;
 }
 
+SoftbodyPoint *Softbody::getPointIfCollisionShapeContains(Point2D containsThis){
+    for (auto& point: points){
+        if (point.coordsInsideCollidableArea(containsThis)){
+            return &point;
+        }
+    }
+    return nullptr;
+}
+
 ColorRGB Softbody::getTrianglesColor(){
     return trianglesColor;
 }
