@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../utils/randomGeneration.h"
+#include "../utils/pointsGeneration.h"
 #include "../objects/ObjectManager.h"
 
 // creates basic scene

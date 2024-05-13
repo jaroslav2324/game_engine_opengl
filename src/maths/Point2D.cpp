@@ -29,3 +29,7 @@ float Point2D::distanceTo(Point2D &second){
     float yDiff = y - second.y;
     return sqrt(xDiff * xDiff + yDiff * yDiff);
 }
+
+void Point2D::debugPrint(){
+    std::cout << "(" << x << ", " << y << ")\n";  
+}

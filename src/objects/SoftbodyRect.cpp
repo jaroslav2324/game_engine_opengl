@@ -19,3 +19,11 @@ SoftbodyRect::SoftbodyRect(Point2D center, float width, float height)
     springs.push_back(SoftbodySpring(&points[0], &points[2], diagLen, tempStifness, 0.1f));
     springs.push_back(SoftbodySpring(&points[1], &points[3], diagLen, tempStifness, 0.1f));
 }
+
+float SoftbodyRect::getWidth(){
+    return width;
+}
+
+float SoftbodyRect::getHeight(){
+    return height;
+}

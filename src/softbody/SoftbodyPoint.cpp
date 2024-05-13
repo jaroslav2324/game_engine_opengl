@@ -9,6 +9,10 @@ mathsCircle SoftbodyPoint::getMathsCircle(){
     return mathsCircle(position, collisionShape.radius);
 }
 
+void SoftbodyPoint::debugPrint(){
+    std::cout << "SoftbodyPoint: ()" << position.x << ", " << position.y << ")\n";
+}
+
 void SoftbodyPoint::addForce(Vector2D force)
 {
     this->physicsParameters.forceVec += force;

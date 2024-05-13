@@ -20,6 +20,7 @@ public:
     void setGravityScale(float gravityScale);
 
     void applyPhysics(float deltaTime);
+    void addVelocity(Vector2D vel);
 
     std::vector<SoftbodyPoint>& getPoints();
     std::vector<SoftbodySpring>& getSprings();

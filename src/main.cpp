@@ -29,7 +29,7 @@ void displayMe(void) {
 void mouseClick(int button, int state, int x, int y) {
 
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-        std::cout << "left mouse butoon pressed" << std::endl;
+        std::cout << "left mouse button pressed" << std::endl;
     }
 }
 
@@ -63,9 +63,9 @@ int main(int argc, char** argv) {
 
     ObjectManager objManager(&renderer, &collisionManager, &physicsManager);
     //loadBasicScene(objManager);
-    loadPingPong(objManager);
+    // loadPingPong(objManager);
     // loadTestRectsScene(objManager);
-    // loadSoftbodyScene(objManager);
+    loadSoftbodyScene(objManager);
 
     glutTimerFunc(1000 / 60, timerCallback60sec, 123);
     glutTimerFunc(1000, cpsChecker, 123);

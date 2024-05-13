@@ -15,8 +15,9 @@ g++ -g src/main.cpp \
  src/objects/RigidBody.cpp \
  src/objects/ObjectManager.cpp \
  src/objects/Softbody.cpp \
+ src/objects/SoftbodyCircle.cpp \
  src/objects/SoftbodyRect.cpp \
- src/utils/randomGeneration.cpp \
+ src/utils/pointsGeneration.cpp \
  src/utils/Color.cpp \
  src/physics/PhysicsParameters.cpp \
  src/physics/CollisionShape.cpp \

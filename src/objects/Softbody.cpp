@@ -17,6 +17,12 @@ void Softbody::applyPhysics(float deltaTime){
     }
 }
 
+void Softbody::addVelocity(Vector2D vel){
+    for (auto& point: points){
+        point.physicsParameters.velocityVec += vel;
+    }
+}
+
 std::vector<SoftbodyPoint> &Softbody::getPoints(){
     return points;
 }

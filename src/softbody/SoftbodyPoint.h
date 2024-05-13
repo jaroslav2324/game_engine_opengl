@@ -16,6 +16,8 @@ struct SoftbodyPoint{
     AABB getCollShapeAABB();
     mathsCircle getMathsCircle();
 
+    void debugPrint();
+
     void addForce(Vector2D force);
     void applyPhysics(float deltaTime);
     void applyVelocity(float deltaTime);

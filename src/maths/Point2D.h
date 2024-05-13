@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include "../triangulation/structures.h"
 
 typedef struct Point2D{
@@ -15,6 +16,8 @@ typedef struct Point2D{
     Point2D operator/(float scalar);
 
     float distanceTo(Point2D& second);
+
+    void debugPrint();
 
     operator Node() const{
         return Node(x, y);

@@ -3,6 +3,7 @@
 #include "../rendering/Renderer.h"
 #include "../physics/CollisionManager.h"
 #include "../physics/PhysicsManager.h"
+#include "SoftbodyCircle.h" 
 
 class ObjectManager
 {
@@ -13,7 +14,7 @@ public:
     Rect* createRect(Point2D center, float width, float height);
     Circle* createCircle(Point2D center, float radius);
     Softbody* createSoftRect(Point2D center, float width, float height);
-
+    Softbody* createSoftCircle(Point2D center, float radius, int numPoints);
 
 private:
     void addPtrToManagers(CollidableObject* ptr);

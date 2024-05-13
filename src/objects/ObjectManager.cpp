@@ -37,6 +37,14 @@ Softbody *ObjectManager::createSoftRect(Point2D center, float width, float heigh
     return softbodyRect;
 }
 
+Softbody *ObjectManager::createSoftCircle(Point2D center, float radius, int numPoints){
+    Softbody* softbodyCircle = new SoftbodyCircle(center, radius, numPoints);
+    objects.push_back(softbodyCircle);
+    renderer->addSoftBodyToPtrs(softbodyCircle);
+    addPtrToManagers(softbodyCircle);
+    return softbodyCircle;
+}
+
 void ObjectManager::addPtrToManagers(CollidableObject *ptr){
     collisionManager->addObject(ptr);
     physicsManager->addObject(ptr);
