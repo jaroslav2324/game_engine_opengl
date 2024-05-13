@@ -6,6 +6,7 @@
 #include "../utils/Color.h"
 #include "../triangulation/triangulation.h"
 #include "../physics/RectCollisionShape.h"
+#include "../maths/Segment2D.h" 
 
 
 class Rect: public RigidBody {
@@ -23,6 +24,8 @@ class Rect: public RigidBody {
 
     float getWidth();
     float getHeight();
+    // fills segs 
+    void getSegments(Segment2D* segs);
 
     void setRenderEdges(bool renderEdges);
     bool isSetEdgesRendered();

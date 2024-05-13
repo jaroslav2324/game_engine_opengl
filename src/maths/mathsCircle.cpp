@@ -1,0 +1,52 @@
+#include "mathsCircle.h"
+
+int mathsCircle::findSegmentIntersections(Segment2D seg, Point2D &intersection1, Point2D &intersection2){
+    float dx, dy, A, B, C, det, t;
+
+    dx = seg.p2.x - seg.p1.x;
+    dy = seg.p2.y - seg.p1.y;
+
+    A = dx * dx + dy * dy;
+    B = 2 * (dx * (seg.p1.x - center.x) + dy * (seg.p1.y - center.y));
+    C = (seg.p1.x - center.x) * (seg.p1.x - center.x) + (seg.p1.y - center.y) * (seg.p1.y - center.y) - radius * radius;
+
+    det = B * B - 4 * A * C;
+    if ((A <= 0.000001) || (det < -1e-6)){
+        return 0;
+    }
+    else if (std::abs(det) - 1e-6 < 1e-6){
+        // One solution.
+        t = -B / (2 * A);
+        Point2D int1(seg.p1.x + t * dx, seg.p1.y + t * dy);
+        if (seg.isPointOnSegment(int1)){
+            intersection1 = int1;
+            return 1;
+        }
+        return 0;
+    }
+    else {
+        // Two solutions.
+        t = (float)((-B + sqrt(det)) / (2 * A));
+        Point2D int1(seg.p1.x + t * dx, seg.p1.y + t * dy);
+        t = (float)((-B - sqrt(det)) / (2 * A));
+        Point2D int2(seg.p1.x + t * dx, seg.p1.y + t * dy);
+        bool int1OnSeg = seg.isPointOnSegment(int1);
+        bool int2OnSeg = seg.isPointOnSegment(int2);
+
+        if (int1OnSeg && !int2OnSeg){
+            intersection1 = int1;
+            return 1;
+        }
+        if (!int1OnSeg && int2OnSeg){
+            intersection1 = int2;
+            return 1;
+        }
+        if (int1OnSeg && int2OnSeg){
+            intersection1 = int1;
+            intersection2 = int2;
+            return 2;
+        }
+
+        return 0;
+    }
+}

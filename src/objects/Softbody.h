@@ -3,7 +3,7 @@
 
 #include "../softbody/SoftbodyPoint.h"
 #include "../softbody/SoftbodySpring.h"
-#include "../maths/Segment.h" 
+#include "../maths/Segment2D.h" 
 #include "../utils/Color.h"
 #include "CollidableObject.h"
 
