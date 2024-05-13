@@ -13,6 +13,10 @@ AABB RectCollisionShape::getAABB()
     return AABB(position.x - width / 2, position.y - height / 2, width, height);
 }
 
+mathsRect RectCollisionShape::getMathsRect(){
+    return mathsRect(position.x - width / 2, position.y - height / 2, width, height);
+}
+
 void RectCollisionShape::setWidth(float width)
 {
     this->width = width;

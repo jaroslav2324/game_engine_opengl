@@ -1,4 +1,5 @@
 #include "mathsCircle.h"
+#include "mathsRect.h"
 
 int mathsCircle::findSegmentIntersections(Segment2D seg, Point2D &intersection1, Point2D &intersection2){
     float dx, dy, A, B, C, det, t;
@@ -49,4 +50,34 @@ int mathsCircle::findSegmentIntersections(Segment2D seg, Point2D &intersection1,
 
         return 0;
     }
+}
+
+bool mathsCircle::intersectsCircle(mathsCircle &second){
+    float distance = sqrt(pow(center.x - second.center.x , 2) 
+    + pow(center.y - second.center.y , 2));
+    if (distance < radius + second.radius)
+        return true;
+    return false;
+}
+
+bool mathsCircle::intersectsRect(mathsRect &rect){
+    Point2D posCir = center;
+    Point2D posRect = Point2D(rect.x + rect.width / 2, rect.y + rect.height / 2);
+    float rectWidth = rect.width;
+    float rectHeight = rect.height;
+
+    float distanceX = std::abs(posCir.x - posRect.x);
+    float distanceY = std::abs(posCir.y - posRect.y);
+
+    if (distanceX > (rectWidth / 2 + radius))
+        return false;
+    if (distanceY > (rectHeight / 2 + radius))
+        return false;
+    if (distanceX <= (rectWidth / 2))
+        return true;
+    if (distanceY <= (rectHeight / 2))
+        return true;
+
+    float squaredCornerDistance = pow((distanceX - rectWidth / 2), 2) + pow((distanceY - rectHeight / 2), 2);
+    return (squaredCornerDistance <= pow(radius, 2));
 }

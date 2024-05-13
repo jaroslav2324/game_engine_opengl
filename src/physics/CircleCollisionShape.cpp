@@ -10,3 +10,7 @@ void CircleCollisionShape::setRadius(float radius){
 AABB CircleCollisionShape::getAABB(){
     return AABB(position.x - radius, position.y - radius, position.x + radius, position.y + radius);
 }
+
+mathsCircle CircleCollisionShape::getMathsCircle(){
+    return mathsCircle(position, radius);
+}

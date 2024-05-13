@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../maths/Point2D.h"
+#include "../maths/mathsCircle.h"
 #include "../physics/SoftbodyPointPhysicsParameters.h"
 #include "../physics/AABB.h"
 #include "SoftbodyPointCollisionShape.h"
@@ -13,6 +14,7 @@ struct SoftbodyPoint{
     SoftbodyPointPhysicsParameters physicsParameters;
 
     AABB getCollShapeAABB();
+    mathsCircle getMathsCircle();
 
     void addForce(Vector2D force);
     void applyPhysics(float deltaTime);

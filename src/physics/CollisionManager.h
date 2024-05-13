@@ -26,6 +26,7 @@ public:
     void resolveCircleRectCollision(Circle& obj1, Rect& obj2); 
     void resolveRectRectCollision(Rect& obj1, Rect& obj2);
 
+    bool checkRigRigIntersection(RigidBody& rig1, RigidBody& rig2);
     bool checkCircleCircleIntersection( Circle& obj1, Circle& obj2);
     bool checkCircleRectIntersection (Circle& obj1, Rect& obj2);
     bool checkAABBintersection(const AABB& a, const AABB& b);

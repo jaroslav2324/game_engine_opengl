@@ -7,6 +7,7 @@
 #include "../triangulation/triangulation.h"
 #include "../physics/RectCollisionShape.h"
 #include "../maths/Segment2D.h" 
+#include "../maths/mathsRect.h" 
 
 
 class Rect: public RigidBody {
@@ -24,6 +25,7 @@ class Rect: public RigidBody {
 
     float getWidth();
     float getHeight();
+    mathsRect getMathsRect();
     // fills segs 
     void getSegments(Segment2D* segs);
 

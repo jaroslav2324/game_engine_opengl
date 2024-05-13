@@ -6,6 +6,7 @@
 #include "../triangulation/structures.h"
 #include "../triangulation/triangulation.h"
 #include "../maths/Point2D.h"
+#include "../maths/mathsCircle.h"
 #include "../utils/Color.h"
 #include "../physics/CircleCollisionShape.h"
 #include "../physics/PhysicsParameters.h"
@@ -28,6 +29,7 @@ class Circle: public RigidBody{
     ColorRGB getEdgesColor();
     void setRadius(float radius);
     float getRadius();
+    mathsCircle getMathsCircle();
 
     void setRenderEdges(bool renderEdges);
     bool isSetEdgesRendered();

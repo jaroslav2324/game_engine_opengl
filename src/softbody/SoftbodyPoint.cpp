@@ -5,6 +5,10 @@ AABB SoftbodyPoint::getCollShapeAABB(){
     return AABB(position.x - radius, position.y - radius, position.x + radius, position.y + radius);
 }
 
+mathsCircle SoftbodyPoint::getMathsCircle(){
+    return mathsCircle(position, collisionShape.radius);
+}
+
 void SoftbodyPoint::addForce(Vector2D force)
 {
     this->physicsParameters.forceVec += force;

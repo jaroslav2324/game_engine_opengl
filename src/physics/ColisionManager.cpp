@@ -98,7 +98,6 @@ void CollisionManager::pushCirFromStaticCir(Circle &cir1, Circle &staticCir){
     cir1.shift(shiftVector);
 }
 
-
 void CollisionManager::pushCirFromStaticRect(Circle & cir, Rect & rect, Vector2D shiftAlongNormal){
     // TODO change
     Vector2D shiftVec = shiftAlongNormal.normalize();
@@ -158,8 +157,6 @@ void CollisionManager::applyCollisionEnergyLoss(RigidBody &body){
         }
     }
 }
-
-
 
 void CollisionManager::resolveCircleCircleCollision(Circle &cir1, Circle &cir2){
 
@@ -388,42 +385,47 @@ void CollisionManager::resolveRectRectCollision(Rect &obj1, Rect &obj2){
     obj2.setVelocity(newVel2);
 }
 
+bool CollisionManager::checkRigRigIntersection(RigidBody &rig1, RigidBody &rig2){
+    RigidBodyType rigType1 = rig1.getRigBodyType();
+    RigidBodyType rigType2 = rig2.getRigBodyType();
+    bool collided = false;
+
+    if (rigType1 == RigidBodyType::CIRCLE && rigType2 == RigidBodyType::CIRCLE){
+        collided = checkCircleCircleIntersection((Circle&)rig1, (Circle&)rig2);
+    }
+    else if (rigType1 == RigidBodyType::CIRCLE && rigType2 == RigidBodyType::RECT){
+        collided = checkCircleRectIntersection((Circle&)rig1, (Rect&)rig2);
+    }
+    else if (rigType1 == RigidBodyType::RECT && rigType2 == RigidBodyType::CIRCLE){
+        collided = checkCircleRectIntersection((Circle&)rig2, (Rect&)rig1);
+    }
+    else if (rigType1 == RigidBodyType::RECT && rigType2 == RigidBodyType::RECT){
+        // As AABB intersect, rects definetely intersect
+        collided = true;
+    }
+    else{
+        std::cout << "ERROR: no option for rigid bodies collision check" << std::endl;
+    }
+
+    return collided;
+}
+
 bool CollisionManager::checkCircleCircleIntersection(Circle &obj1, Circle &obj2)
 {
     CircleCollisionShape* shape1 = dynamic_cast<CircleCollisionShape*>(obj1.getCollisionShape());
     CircleCollisionShape* shape2 = dynamic_cast<CircleCollisionShape*>(obj2.getCollisionShape());
-    float distance = sqrt(pow(shape1->getPosition().x - shape2->getPosition().x , 2) 
-    + pow(shape1->getPosition().y - shape2->getPosition().y , 2));
-
-    if (distance < shape1->getRadius() + shape2->getRadius())
-        return true;
-    return false;
+    mathsCircle mc1 = shape1->getMathsCircle();
+    mathsCircle mc2 = shape2->getMathsCircle();
+    return mc1.intersectsCircle(mc2);
 }
 
 bool CollisionManager::checkCircleRectIntersection(Circle &obj1, Rect &obj2){
     CircleCollisionShape* shapeCir = dynamic_cast<CircleCollisionShape*>(obj1.getCollisionShape());
     RectCollisionShape* shapeRect = dynamic_cast<RectCollisionShape*>(obj2.getCollisionShape());
 
-    Point2D posCir = shapeCir->getPosition();
-    Point2D posRect = shapeRect->getPosition();
-    float radius = shapeCir->getRadius();
-    float rectWidth = shapeRect->getWidth();
-    float rectHeight = shapeRect->getHeight();
-
-    float distanceX = std::abs(posCir.x - posRect.x);
-    float distanceY = std::abs(posCir.y - posRect.y);
-
-    if (distanceX > (rectWidth / 2 + radius))
-        return false;
-    if (distanceY > (rectHeight / 2 + radius))
-        return false;
-    if (distanceX <= (rectWidth / 2))
-        return true;
-    if (distanceY <= (rectHeight / 2))
-        return true;
-
-    float squaredCornerDistance = pow((distanceX - rectWidth / 2), 2) + pow((distanceY - rectHeight / 2), 2);
-    return (squaredCornerDistance <= pow(radius, 2));
+    mathsCircle mCir = shapeCir->getMathsCircle();
+    mathsRect mRect = shapeRect->getMathsRect();
+    return mCir.intersectsRect(mRect);
 }
 
 void CollisionManager::addObject(CollidableObject *obj){
@@ -454,31 +456,7 @@ void CollisionManager::resolveCollisions(){
                     continue;
                 }
 
-                RigidBodyType rigType1 = rig1->getRigBodyType();
-                RigidBodyType rigType2 = rig2->getRigBodyType();
-
-                bool collided = false;
-
-                if (rigType1 == RigidBodyType::CIRCLE && rigType2 == RigidBodyType::CIRCLE){
-                    Circle* cir1 = (Circle*)rig1;
-                    Circle* cir2 = (Circle*)rig2;
-                    collided = checkCircleCircleIntersection(*cir1, *cir2);
-                }
-                else if (rigType1 == RigidBodyType::CIRCLE && rigType2 == RigidBodyType::RECT){
-                    Circle* cir1 = (Circle*)rig1;
-                    Rect* rect2 = (Rect*)rig2;
-                    collided = checkCircleRectIntersection(*cir1, *rect2);
-                }
-                else if (rigType1 == RigidBodyType::RECT && rigType2 == RigidBodyType::CIRCLE){
-                    Rect* rect1 = (Rect*)rig1;
-                    Circle* cir2 = (Circle*)rig2;
-                    collided = checkCircleRectIntersection(*cir2, *rect1);
-                }
-                else if (rigType1 == RigidBodyType::RECT && rigType2 == RigidBodyType::RECT){
-                    // As AABB intersect, rects definetely intersect
-                    collided = true;
-                }
-                // TODO add else
+                bool collided = checkRigRigIntersection(*rig1, *rig2);
 
                 if (collided){
                     resolveRigidRigidCollision(*rig1, *rig2);
@@ -511,118 +489,20 @@ void CollisionManager::resolveCollisions(){
     }
 }
 
-// TODO REFACTOR
 Vector2D CollisionManager::getCircleRectIntersectionLineVec(Circle &cir, Rect &rect){
-    float radius = cir.getRadius();
-
-    // create segments
-    Segment2D segments[4];
-    rect.getSegments(segments);
-
-    int countInters = 0;
-    Point2D inters[8];
-    int idxCurrEmptyInter = 0;
-    Point2D inter1;
-    Point2D inter2;
-    for (int segIdx = 0; segIdx < 4; segIdx++){
-        int count = mathsCircle(cir.getCenter(), cir.getRadius())
-        .findSegmentIntersections(segments[segIdx], inter1, inter2);
-        if (count == 2){
-            inters[idxCurrEmptyInter] = inter1;
-            idxCurrEmptyInter++;
-            inters[idxCurrEmptyInter] = inter2;
-            idxCurrEmptyInter++;
-        }
-        if (count == 1){
-            inters[idxCurrEmptyInter] = inter1;
-            idxCurrEmptyInter++;
-        }
-        countInters += count;
-    }
-    if (countInters < 1 || countInters > 2){
-        std::cout << "ERROR: amount intersections of rect and circle is " << countInters << "\n";
-    }
-    // corner collision
-    if (countInters == 1){
-        Vector2D fromCenterVec = inters[0] - cir.getCenter();
-        std::cout << "Corner collision" << std::endl;
-        // TODO change
-        return Vector2D(-fromCenterVec.y, fromCenterVec.x);
-    }
-    inter1 = inters[0];
-    inter2 = inters[1];
-    return Vector2D(inter1.x - inter2.x, inter1.y - inter2.y);
+    mathsCircle mCir = cir.getMathsCircle();
+    mathsRect mRect = rect.getMathsRect();
+    return mRect.getIntersectionLineVecCircle(mCir);
 }
 
 Vector2D CollisionManager::getRectRectIntersectionLineVec(Rect& rect1, Rect& rect2){
-
-    // create segments
-    Segment2D segments1[4];
-    rect1.getSegments(segments1);
-    Segment2D segments2[4];
-    rect2.getSegments(segments2);
-
-    int countInterPoints = 0;
-    Point2D interPoints[16];
-    int currInterPidx = 0;
-    Point2D interP;
-    for (int idx1 = 0; idx1 < 4; idx1++){
-        for (int idx2 = idx1 + 1; idx2 < 4; idx2++){
-            int count = segments1[idx1].findSegmentIntersection(segments2[idx2], interP);
-            if (count == 1){
-                interPoints[currInterPidx] = interP;
-                currInterPidx++;
-                countInterPoints += count;
-            }
-        }
-    }
-    if (countInterPoints < 1 || countInterPoints > 2){
-        std::cout << "ERROR: Rect Rect intersection points wrong count: " << countInterPoints << "\n";
-    }
-
-    return Vector2D(interPoints[0].x - interPoints[1].x, interPoints[0].y - interPoints[1].y);
+    mathsRect mRect1 = rect1.getMathsRect();
+    mathsRect mRect2 = rect2.getMathsRect();
+    return mRect1.getIntersectionLineVecRect(mRect2);
 }
 
 Vector2D CollisionManager::getSoftPointRectIntersectionLineVec(SoftbodyPoint &point, Rect &rect){
-    float radius = point.collisionShape.radius;
-
-    // create segments
-    Segment2D segments[4];
-    rect.getSegments(segments);
-
-    int countInters = 0;
-    Point2D inters[8];
-    int idxCurrEmptyInter = 0;
-    Point2D inter1;
-    Point2D inter2;
-    for (int segIdx = 0; segIdx < 4; segIdx++){
-        int count = mathsCircle(point.position, radius)
-        .findSegmentIntersections(segments[segIdx], inter1, inter2);
-        if (count == 2){
-            inters[idxCurrEmptyInter] = inter1;
-            idxCurrEmptyInter++;
-            inters[idxCurrEmptyInter] = inter2;
-            idxCurrEmptyInter++;
-        }
-        if (count == 1){
-            inters[idxCurrEmptyInter] = inter1;
-            idxCurrEmptyInter++;
-        }
-        countInters += count;
-    }
-    if (countInters < 1 || countInters > 2){
-        int a = 1;
-        std::cout << "ERROR: amount intersections of soft point and rect is " << countInters << "\n";
-        return Vector2D(0, 0);
-    }
-    // corner collision
-    if (countInters == 1){
-        Vector2D fromCenterVec = inters[0] - point.position;
-        std::cout << "Corner collision" << std::endl;
-        // TODO change
-        return Vector2D(-fromCenterVec.y, fromCenterVec.x);
-    }
-    inter1 = inters[0];
-    inter2 = inters[1];
-    return Vector2D(inter1.x - inter2.x, inter1.y - inter2.y);
+    mathsCircle mCir = point.getMathsCircle();
+    mathsRect mRect = rect.getMathsRect();
+    return mRect.getIntersectionLineVecCircle(mCir);
 }

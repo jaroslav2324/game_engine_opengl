@@ -76,11 +76,12 @@ float Rect::getHeight(){
     return this->height;
 }
 
+mathsRect Rect::getMathsRect(){
+    return mathsRect(center.x - width/2, center.y - height/2, width, height);
+}
+
 void Rect::getSegments(Segment2D *segs){
-    segs[0] = Segment2D(Point2D(center.x - width/2, center.y - height/2), Point2D(center.x + width/2, center.y - height/2));
-    segs[1] = Segment2D(Point2D(center.x + width/2, center.y - height/2), Point2D(center.x + width/2, center.y + height/2));
-    segs[2] = Segment2D(Point2D(center.x + width/2, center.y + height/2), Point2D(center.x - width/2, center.y + height/2));
-    segs[3] = Segment2D(Point2D(center.x - width/2, center.y + height/2), Point2D(center.x - width/2, center.y - height/2));
+    getMathsRect().getSegments(segs);
 }
 
 void Rect::setRenderEdges(bool renderEdges){

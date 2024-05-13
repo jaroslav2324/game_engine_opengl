@@ -5,6 +5,7 @@ g++ -g src/main.cpp \
  src/maths/Matrix2x2.cpp \
  src/maths/Segment2D.cpp \
  src/maths/mathsCircle.cpp \
+ src/maths/mathsRect.cpp \
  src/triangulation/structures.cpp \
  src/triangulation/triangulation.cpp \
  src/rendering/Renderer.cpp \

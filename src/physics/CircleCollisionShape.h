@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CollisionShape.h"
+#include "../maths/mathsCircle.h"
 
 class CircleCollisionShape: public CollisionShape{
 public:
@@ -8,6 +9,8 @@ public:
     float getRadius();
     void setRadius(float radius);
     virtual AABB getAABB();
+
+    mathsCircle getMathsCircle();
 
     protected:
     float radius;

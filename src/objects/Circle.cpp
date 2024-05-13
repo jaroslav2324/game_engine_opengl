@@ -80,6 +80,10 @@ float Circle::getRadius(){
     return radius;
 }
 
+mathsCircle Circle::getMathsCircle(){
+    return mathsCircle(center, radius);
+}
+
 void Circle::setRenderEdges(bool renderEdges){
     this->renderEdges = renderEdges;
 }

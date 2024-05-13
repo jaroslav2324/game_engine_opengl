@@ -46,7 +46,7 @@ void timerCallback60sec(int value){
 
 // collosion checks per sec
 void cpsChecker(int value){
-    std::cout << "CPS: " << cps << std::endl;
+    // std::cout << "collision checks per sec: " << cps << std::endl;
     cps = 0;
     glutTimerFunc(1000, cpsChecker, 123);
 }
@@ -62,8 +62,8 @@ int main(int argc, char** argv) {
     glutDisplayFunc(displayMe);
 
     ObjectManager objManager(&renderer, &collisionManager, &physicsManager);
-     loadBasicScene(objManager);
-    // loadPingPong(objManager);
+    //loadBasicScene(objManager);
+    loadPingPong(objManager);
     // loadTestRectsScene(objManager);
     // loadSoftbodyScene(objManager);
 
