@@ -46,6 +46,10 @@ bool Vector2D::isZeroVector(){
     return false;
 }
 
+void Vector2D::debugPrint(){
+    std::cout << "Vector2D: " << x << ", " << y << std::endl;
+}
+
 Vector2D Vector2D::operator-(){
     Vector2D res(-x, -y);
     return res;

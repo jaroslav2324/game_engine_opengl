@@ -19,6 +19,8 @@ struct Vector2D
     
     bool isZeroVector();
 
+    void debugPrint();
+
     Vector2D operator-();
     Vector2D operator+(const Vector2D& vector);
     Vector2D operator-(const Vector2D& vector);
