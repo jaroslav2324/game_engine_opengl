@@ -39,6 +39,8 @@ public:
     bool isSetRenderSprings();
     void setRenderPoints(bool value);
     bool isSetRenderPoints();
+    void setDebugDrawAABB(bool value);
+    bool isSetDebugDrawAABB();
 
     AABB getAABB();
 
@@ -53,6 +55,7 @@ protected:
 
     bool renderSprings = true;
     bool renderPoints = true;
+    bool debugDrawAABB = false;
 
     SoftbodyType softbodyType = SoftbodyType::UNDEFINED;
 };

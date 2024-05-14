@@ -25,6 +25,8 @@ public:
     void resolveCircleCircleCollision(Circle& cir1, Circle& cir2);
     void resolveCircleRectCollision(Circle& obj1, Rect& obj2); 
     void resolveRectRectCollision(Rect& obj1, Rect& obj2);
+    void resolveSoftSoftCollision(Softbody& soft1, Softbody& soft2);
+    void resolveSoftPointSoftPointCollision(SoftbodyPoint& p1, SoftbodyPoint& p2);
 
     bool checkRigRigIntersection(RigidBody& rig1, RigidBody& rig2);
     bool checkCircleCircleIntersection( Circle& obj1, Circle& obj2);
@@ -41,6 +43,7 @@ public:
     void pushCirFromStaticCir(Circle& cir1, Circle& staticCir);
     void pushCirFromStaticRect(Circle& cir, Rect& staticRect, Vector2D shiftAlongNormal);
     void pushSoftPointFromStaticRect(SoftbodyPoint& point, Rect& rect, Vector2D shiftAlongNormal);
+    void pushSoftPointsApart(SoftbodyPoint& p1, SoftbodyPoint& p2);
 
     Vector2D reflectVelocityIfDirectsAgainstNormal(Vector2D vel, Vector2D normalReflectOver);
 

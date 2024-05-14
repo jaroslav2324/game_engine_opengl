@@ -69,6 +69,12 @@ void Renderer::drawSoftBodies(){
                 drawSoftSpring(spring);
             }
         }
+        if (bodyPtr->isSetDebugDrawAABB()){
+            ColorRGB aabbColor(255, 0, 0);
+            setOpenGLColor(aabbColor);
+            auto aabb = bodyPtr->getAABB();
+            drawAABB(aabb);
+        }
     }
 }
 
@@ -94,6 +100,27 @@ void Renderer::drawRect(Rect *rect){
         setOpenGLColor(edgeColor);
         drawEdges(rect->getRenderedTriangles());
     }
+}
+
+void Renderer::drawAABB(AABB &aabb){
+    Point2D p1(aabb.x, aabb.y);
+    Point2D p2(aabb.x + aabb.w, aabb.y);
+    Point2D p3(aabb.x + aabb.w, aabb.y + aabb.h);
+    Point2D p4(aabb.x, aabb.y + aabb.h);
+    auto norm1 = coordsToNormed(p1);
+    auto norm2 = coordsToNormed(p2);
+    auto norm3 = coordsToNormed(p3);
+    auto norm4 = coordsToNormed(p4);
+    glBegin(GL_LINES);
+    glVertex2f(norm1.x, norm1.y);
+    glVertex2f(norm2.x, norm2.y);
+    glVertex2f(norm2.x, norm2.y);
+    glVertex2f(norm3.x, norm3.y);
+    glVertex2f(norm3.x, norm3.y);
+    glVertex2f(norm4.x, norm4.y);
+    glVertex2f(norm4.x, norm4.y);
+    glVertex2f(norm1.x, norm1.y);
+   glEnd();
 }
 
 void Renderer::drawTriangs(std::vector<NodesEdgesTriangles> &trianglesVec){

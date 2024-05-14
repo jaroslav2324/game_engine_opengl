@@ -100,6 +100,24 @@ void CollisionManager::pushSoftPointFromStaticRect(SoftbodyPoint &point, Rect &r
     } while(checkSoftPointRectIntersection(point, rect));
 }
 
+void CollisionManager::pushSoftPointsApart(SoftbodyPoint& p1, SoftbodyPoint &p2){
+    // // find how much to shift
+    float distNeeded = p1.collisionShape.radius + p2.collisionShape.radius;
+    Vector2D distVec = p1.position - p2.position;
+    float shift = distNeeded - distVec.length();
+    shift += 1e-3;
+
+    //  find shift vectors
+    Vector2D normal = distVec.normalize();
+    Vector2D shiftVector1 = shift / 2 * normal;
+    Vector2D shiftVector2 = -(shift / 2 * normal);
+
+    p1.position.x += shiftVector1.x;
+    p1.position.y += shiftVector1.y;
+    p2.position.x += shiftVector2.x;
+    p2.position.y += shiftVector2.y;
+}
+
 // reflects velocity of first body over velocity of second body 
 // if velocity of first body directs in the opposite normal direction
 // returns reflected(or not) velocity
@@ -370,6 +388,35 @@ void CollisionManager::resolveRectRectCollision(Rect &obj1, Rect &obj2){
     obj2.setVelocity(newVel2);
 }
 
+void CollisionManager::resolveSoftSoftCollision(Softbody &soft1, Softbody &soft2){
+    for (auto& p1 : soft1.getPoints()){
+        for (auto& p2: soft2.getPoints()){
+            AABB aabb1 = p1.getCollShapeAABB();
+            AABB aabb2 = p2.getCollShapeAABB();
+            if (aabb1.intersects(aabb2)){
+                resolveSoftPointSoftPointCollision(p1, p2);
+            }
+        }
+    }
+}
+
+void CollisionManager::resolveSoftPointSoftPointCollision(SoftbodyPoint &p1, SoftbodyPoint &p2){
+    float mass1 = p1.physicsParameters.mass;
+    float mass2 = p2.physicsParameters.mass;
+
+    Vector2D distVec = p1.position - p2.position;
+    Vector2D vel1 = p1.physicsParameters.velocityVec;
+    Vector2D vel2 = p2.physicsParameters.velocityVec;
+
+    Vector2D u1 = vel1 + (2 * mass2 * distVec / ((mass1 + mass2) * distVec.dot(distVec))) * (vel2 - vel1).dot(distVec);
+    Vector2D u2 = vel2 - (2 * mass1 * distVec / ((mass1 + mass2) * distVec.dot(distVec))) * (vel2 - vel1).dot(distVec);
+
+    pushSoftPointsApart(p1, p2);
+
+    p1.physicsParameters.velocityVec = vel1;
+    p2.physicsParameters.velocityVec = vel2;
+}
+
 bool CollisionManager::checkRigRigIntersection(RigidBody &rig1, RigidBody &rig2){
     RigidBodyType rigType1 = rig1.getRigBodyType();
     RigidBodyType rigType2 = rig2.getRigBodyType();
@@ -468,6 +515,12 @@ void CollisionManager::resolveCollisions(){
                     checkResolveSoftRectCollision(*soft, (Rect&)*rigid);                         
                 }
 
+                continue;
+            }
+
+            if (obj1->getObjectType() == ObjectType::SOFTBODY && obj2->getObjectType() == ObjectType::SOFTBODY){
+
+                resolveSoftSoftCollision((Softbody&)*obj1, (Softbody&)*obj2);
                 continue;
             }
         }

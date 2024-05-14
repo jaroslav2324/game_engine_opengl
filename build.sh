@@ -19,6 +19,7 @@ g++ -g src/main.cpp \
  src/objects/SoftbodyRect.cpp \
  src/utils/pointsGeneration.cpp \
  src/utils/Color.cpp \
+ src/physics/AABB.cpp \
  src/physics/PhysicsParameters.cpp \
  src/physics/CollisionShape.cpp \
  src/physics/CircleCollisionShape.cpp \

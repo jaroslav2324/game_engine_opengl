@@ -2,7 +2,7 @@
 
 AABB SoftbodyPoint::getCollShapeAABB(){
     float radius = collisionShape.radius;
-    return AABB(position.x - radius, position.y - radius, position.x + radius, position.y + radius);
+    return AABB(position.x - radius, position.y - radius, 2 * radius, 2 * radius);
 }
 
 mathsCircle SoftbodyPoint::getMathsCircle(){

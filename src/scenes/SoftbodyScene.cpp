@@ -55,10 +55,12 @@ void loadSoftbodyScene(ObjectManager &objManager){
     rect->setGravityScale(0.1f);
 
     Softbody* circle = objManager.createSoftCircle({700, 300}, 50, 8);
+    circle->setDebugDrawAABB(true);
     circle->setGravityScale(1.0f);
     circle->addVelocity({-200, 50});
 
     Softbody* circle2 = objManager.createSoftCircle({500, 300}, 50, 8);
+    circle2->setDebugDrawAABB(true);
     circle2->setGravityScale(0.0f);
     circle2->setStiffness(20.0f);
 

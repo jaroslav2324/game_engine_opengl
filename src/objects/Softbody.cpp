@@ -86,6 +86,14 @@ bool Softbody::isSetRenderPoints(){
     return renderPoints;
 }
 
+void Softbody::setDebugDrawAABB(bool value){
+    debugDrawAABB = value;
+}
+
+bool Softbody::isSetDebugDrawAABB(){
+    return debugDrawAABB;
+}
+
 AABB Softbody::getAABB(){
     if (points.size() <= 0){
         return AABB(0, 0, 0, 0);
@@ -97,16 +105,16 @@ AABB Softbody::getAABB(){
     maxX = minX;
     maxY = minY;
     for (auto point: points){
-        if (point.position.x < minX){
+        if (point.position.x - point.collisionShape.radius < minX){
             minX = point.position.x - point.collisionShape.radius;
         }
-        if (point.position.x > maxX){
+        if (point.position.x + point.collisionShape.radius > maxX){
             maxX = point.position.x + point.collisionShape.radius;
         }
-        if (point.position.y < minY){
+        if (point.position.y - point.collisionShape.radius < minY){
             minY = point.position.y - point.collisionShape.radius; 
         }
-        if (point.position.y > maxY){
+        if (point.position.y + point.collisionShape.radius > maxY){
             maxY = point.position.y + point.collisionShape.radius;
         }
     }

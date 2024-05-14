@@ -33,6 +33,7 @@ class Renderer{
     void drawSoftBodies();
     void drawCircle(Circle* circle);
     void drawRect(Rect* rect);
+    void drawAABB(AABB& aabb);
     void drawTriangs(std::vector<NodesEdgesTriangles>& trianglesVec);
     void drawEdges(std::vector<NodesEdgesTriangles>& trianglesVec);
     void drawSoftPoint(SoftbodyPoint& point);
