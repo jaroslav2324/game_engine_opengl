@@ -14,20 +14,20 @@ void loadBasicScene(ObjectManager& objManager){
     cir1->setElastic(0.8);
     cir1->setMass(1000);
 
-    Circle* cir2 = objManager.createCircle(Point2D(600, 600), 100);
+    Circle* cir2 = objManager.createCircle(Point2D(600, 600), 50);
     cir2->setCircleColor({0.0f, 0.7f, 0.0f});
     cir2->setGravityScale(0);
     cir2->setVelocity(Vector2D(-600, -300));
     cir2->setMass(100);
     cir2->setRenderEdges(true);
 
-    Circle* cir3 = objManager.createCircle(Point2D(800, 200), 100);
+    Circle* cir3 = objManager.createCircle(Point2D(800, 200), 50);
     cir3->setCircleColor({0.0f, 1.0f, 1.0f});
     cir3->setVelocity(Vector2D(550, 50));
     cir3->setGravityScale(0);
     cir3->setRenderEdges(true);
 
-    Circle* cir4 = objManager.createCircle(Point2D(300, 400), 100);
+    Circle* cir4 = objManager.createCircle(Point2D(300, 400), 50);
     cir4->setCircleColor({0.0f, 0.0f, 0.7f});
     cir4->setGravityScale(0);
     cir4->setRenderEdges(true);

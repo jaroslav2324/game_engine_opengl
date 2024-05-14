@@ -21,6 +21,7 @@ public:
 
     void applyPhysics(float deltaTime);
     void addVelocity(Vector2D vel);
+    void setStiffness(float stiffness);
 
     std::vector<SoftbodyPoint>& getPoints();
     std::vector<SoftbodySpring>& getSprings();

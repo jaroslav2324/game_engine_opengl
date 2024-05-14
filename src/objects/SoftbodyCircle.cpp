@@ -22,7 +22,7 @@ SoftbodyCircle::SoftbodyCircle(Point2D center, float radius, int numPoints)
     // for (int i = 0; i < numPoints; i++){
     //     this->springs.push_back(SoftbodySpring(&points[i], &points[(i + numPoints / 2) % numPoints], 2 * radius, tempStiffness, tempDamping));
     // }
-    
+
     for (int i = 0; i < numPoints; i++){
         this->springs.push_back(SoftbodySpring(&points[i], &points[numPoints], radius, tempStiffness, tempDamping));
     }

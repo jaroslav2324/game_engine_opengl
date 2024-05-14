@@ -58,6 +58,14 @@ void loadSoftbodyScene(ObjectManager &objManager){
     circle->setGravityScale(1.0f);
     circle->addVelocity({-200, 50});
 
+    Softbody* circle2 = objManager.createSoftCircle({500, 300}, 50, 8);
+    circle2->setGravityScale(0.0f);
+    circle2->setStiffness(20.0f);
+
+    // Softbody* circle3 = objManager.createSoftCircle({300, 300}, 50, 8);
+    // circle3->setGravityScale(1.0f);
+    // circle3->setStiffness(5.0f);
+
     glutMouseFunc(mouseClickSoftbodyScene);
     glutMotionFunc(mouseMoveSoftbodyScene);
     glutTimerFunc(0, mouseCaptureCallback, 123);

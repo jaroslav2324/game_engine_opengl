@@ -23,6 +23,12 @@ void Softbody::addVelocity(Vector2D vel){
     }
 }
 
+void Softbody::setStiffness(float stiffness){
+    for(auto& spr: springs){
+        spr.stiffness = stiffness;
+        }
+}
+
 std::vector<SoftbodyPoint> &Softbody::getPoints(){
     return points;
 }
