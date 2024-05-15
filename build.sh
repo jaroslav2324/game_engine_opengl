@@ -16,6 +16,7 @@ g++ -g src/main.cpp \
  src/objects/ObjectManager.cpp \
  src/objects/Softbody.cpp \
  src/objects/SoftbodyCircle.cpp \
+ src/objects/SoftbodyCell.cpp \
  src/objects/SoftbodyRect.cpp \
  src/utils/pointsGeneration.cpp \
  src/utils/Color.cpp \

@@ -45,6 +45,14 @@ Softbody *ObjectManager::createSoftCircle(Point2D center, float radius, int numP
     return softbodyCircle;
 }
 
+Softbody *ObjectManager::createSoftCell(Point2D center, float radius){
+    Softbody* softbodyCell = new SoftbodyCell(center, radius);
+    objects.push_back(softbodyCell);
+    renderer->addSoftBodyToPtrs(softbodyCell);
+    addPtrToManagers(softbodyCell);
+    return softbodyCell;
+}
+
 SoftbodyPoint *ObjectManager::getSoftbodyPointContaining(Point2D containedCoords){
     for (auto collObject: objects){
         if (collObject->getObjectType() == ObjectType::SOFTBODY){

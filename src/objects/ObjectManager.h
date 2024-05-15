@@ -4,6 +4,7 @@
 #include "../physics/CollisionManager.h"
 #include "../physics/PhysicsManager.h"
 #include "SoftbodyCircle.h" 
+#include "SoftbodyCell.h"
 
 class ObjectManager
 {
@@ -15,6 +16,7 @@ public:
     Circle* createCircle(Point2D center, float radius);
     Softbody* createSoftRect(Point2D center, float width, float height);
     Softbody* createSoftCircle(Point2D center, float radius, int numPoints);
+    Softbody* createSoftCell(Point2D center, float radius);
 
     SoftbodyPoint* getSoftbodyPointContaining(Point2D containedCoords);
 

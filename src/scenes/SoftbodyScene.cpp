@@ -51,22 +51,22 @@ void loadSoftbodyScene(ObjectManager &objManager){
     localPtrToObjManager = &objManager;
 
     loadBorders(objManager);
-    Softbody* rect = objManager.createSoftRect({300, 500}, 40, 80);
-    rect->setGravityScale(0.1f);
 
-    Softbody* circle = objManager.createSoftCircle({700, 300}, 50, 8);
-    circle->setDebugDrawAABB(true);
-    circle->setGravityScale(1.0f);
-    circle->addVelocity({-200, 50});
+    Softbody* cell = objManager.createSoftCell({500, 300}, 150);
+    cell->setGravityScale(0.1f);
 
-    Softbody* circle2 = objManager.createSoftCircle({500, 300}, 50, 8);
-    circle2->setDebugDrawAABB(true);
-    circle2->setGravityScale(0.0f);
-    circle2->setStiffness(20.0f);
+    // Softbody* rect = objManager.createSoftRect({300, 500}, 40, 80);
+    // rect->setGravityScale(0.1f);
 
-    // Softbody* circle3 = objManager.createSoftCircle({300, 300}, 50, 8);
-    // circle3->setGravityScale(1.0f);
-    // circle3->setStiffness(5.0f);
+    // Softbody* circle = objManager.createSoftCircle({700, 300}, 50, 8);
+    // circle->setDebugDrawAABB(true);
+    // circle->setGravityScale(1.0f);
+    // circle->addVelocity({-200, 50});
+
+    // Softbody* circle2 = objManager.createSoftCircle({500, 300}, 50, 8);
+    // circle2->setDebugDrawAABB(true);
+    // circle2->setGravityScale(0.0f);
+    // circle2->setStiffness(20.0f);
 
     glutMouseFunc(mouseClickSoftbodyScene);
     glutMotionFunc(mouseMoveSoftbodyScene);

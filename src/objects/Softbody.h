@@ -10,6 +10,7 @@
 enum class SoftbodyType{
     SOFTBODY_CIRCLE,
     SOFTBODY_RECT,
+    SOFTBODY_CELL,
     UNDEFINED
 };
 
