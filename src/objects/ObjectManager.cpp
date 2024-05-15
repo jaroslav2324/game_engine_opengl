@@ -45,8 +45,8 @@ Softbody *ObjectManager::createSoftCircle(Point2D center, float radius, int numP
     return softbodyCircle;
 }
 
-Softbody *ObjectManager::createSoftCell(Point2D center, float radius){
-    Softbody* softbodyCell = new SoftbodyCell(center, radius);
+Softbody *ObjectManager::createSoftCell(Point2D center, float radius, float stiffness){
+    Softbody* softbodyCell = new SoftbodyCell(center, radius, stiffness);
     objects.push_back(softbodyCell);
     renderer->addSoftBodyToPtrs(softbodyCell);
     addPtrToManagers(softbodyCell);

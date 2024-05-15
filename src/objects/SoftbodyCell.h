@@ -5,7 +5,7 @@
 
 class SoftbodyCell: public Softbody{
 public:
-    SoftbodyCell(Point2D center, float radius);
+    SoftbodyCell(Point2D center, float radius, float stiffness);
 private:
     float outerRadius;
     float innerRadius;

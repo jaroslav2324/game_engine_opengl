@@ -16,7 +16,7 @@ public:
     Circle* createCircle(Point2D center, float radius);
     Softbody* createSoftRect(Point2D center, float width, float height);
     Softbody* createSoftCircle(Point2D center, float radius, int numPoints);
-    Softbody* createSoftCell(Point2D center, float radius);
+    Softbody* createSoftCell(Point2D center, float radius, float stiffness);
 
     SoftbodyPoint* getSoftbodyPointContaining(Point2D containedCoords);
 

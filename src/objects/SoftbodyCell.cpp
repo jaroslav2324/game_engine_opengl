@@ -1,13 +1,13 @@
 #include "SoftbodyCell.h"
 
-SoftbodyCell::SoftbodyCell(Point2D center, float radius)
+SoftbodyCell::SoftbodyCell(Point2D center, float radius, float stiffness)
 :Softbody(SoftbodyType::SOFTBODY_CELL){
     this->outerRadius = radius;
     this->innerRadius = radius / 2;
 
-    float firstNeighbourStiffness = 10.0f;
-    float secondNeighbourStiffness = 3.0f;
-    float stiffnessBetweenRadiuses = 20.0f;
+    float firstNeighbourStiffness = stiffness;
+    float secondNeighbourStiffness = 0.3f * stiffness;
+    float stiffnessBetweenRadiuses = 2 * stiffness;
     
 
     SoftbodyPoint defaultPoint({0, 0});
