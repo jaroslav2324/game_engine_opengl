@@ -53,7 +53,7 @@ void loadSoftbodyScene(ObjectManager &objManager){
     loadBorders(objManager);
 
     Softbody* cell = objManager.createSoftCell({500, 300}, 150);
-    cell->setGravityScale(0.1f);
+    cell->setGravityScale(0.0f);
 
     // Softbody* rect = objManager.createSoftRect({300, 500}, 40, 80);
     // rect->setGravityScale(0.1f);

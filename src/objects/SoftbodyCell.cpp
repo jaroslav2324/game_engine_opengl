@@ -7,7 +7,7 @@ SoftbodyCell::SoftbodyCell(Point2D center, float radius)
 
     float firstNeighbourStiffness = 10.0f;
     float secondNeighbourStiffness = 3.0f;
-    float stiffnessBetweenRadiuses = 30.0f;
+    float stiffnessBetweenRadiuses = 20.0f;
     
 
     SoftbodyPoint defaultPoint({0, 0});

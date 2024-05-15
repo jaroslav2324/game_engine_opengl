@@ -417,6 +417,23 @@ void CollisionManager::resolveSoftPointSoftPointCollision(SoftbodyPoint &p1, Sof
     p2.physicsParameters.velocityVec = vel2;
 }
 
+void CollisionManager::resolveSoftInnerCollisions(Softbody &obj){
+    auto points = obj.getPoints();
+    int amountPoints = points.size();
+    for (int i = 0; i < amountPoints; i++){
+        for (int j = 0; j < amountPoints; j++){
+            if (i != j){
+                AABB aabb1 = points[i].getCollShapeAABB();
+                AABB aabb2 = points[j].getCollShapeAABB();
+                if (aabb1.intersects(aabb2)){
+                    pushSoftPointsApart(points[i], points[j]);
+                }
+            }
+        }
+    }
+
+}
+
 bool CollisionManager::checkRigRigIntersection(RigidBody &rig1, RigidBody &rig2){
     RigidBodyType rigType1 = rig1.getRigBodyType();
     RigidBodyType rigType2 = rig2.getRigBodyType();
@@ -523,6 +540,13 @@ void CollisionManager::resolveCollisions(){
                 resolveSoftSoftCollision((Softbody&)*obj1, (Softbody&)*obj2);
                 continue;
             }
+        }
+    }
+
+    // resolve inner colliisons for softbodies{
+    for (auto& obj :collidableObjects){
+        if (obj->getObjectType() == ObjectType::SOFTBODY){
+            resolveSoftInnerCollisions((Softbody&) *obj);
         }
     }
 }

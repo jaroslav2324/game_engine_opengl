@@ -27,6 +27,7 @@ public:
     void resolveRectRectCollision(Rect& obj1, Rect& obj2);
     void resolveSoftSoftCollision(Softbody& soft1, Softbody& soft2);
     void resolveSoftPointSoftPointCollision(SoftbodyPoint& p1, SoftbodyPoint& p2);
+    void resolveSoftInnerCollisions(Softbody& obj);
 
     bool checkRigRigIntersection(RigidBody& rig1, RigidBody& rig2);
     bool checkCircleCircleIntersection( Circle& obj1, Circle& obj2);
