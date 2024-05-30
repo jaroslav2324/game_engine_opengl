@@ -53,7 +53,7 @@ void loadSoftbodyScene(ObjectManager &objManager){
     loadBorders(objManager);
 
     Softbody* cell = objManager.createSoftCell({700, 300}, 150, 10.0f);
-    cell->setGravityScale(0.1f);
+    cell->setGravityScale(0.0f);
 
     // Softbody* cell2 = objManager.createSoftCell({200, 300}, 50, 2.0f);
     // cell2->setGravityScale(0.0f);
@@ -63,7 +63,7 @@ void loadSoftbodyScene(ObjectManager &objManager){
     // rect->setGravityScale(0.1f);
 
     // Softbody* circle = objManager.createSoftCircle({700, 300}, 50, 8);
-    // circle->setDebugDrawAABB(true);
+    // // circle->setDebugDrawAABB(true);
     // circle->setGravityScale(1.0f);
     // circle->addVelocity({-200, 50});
 
